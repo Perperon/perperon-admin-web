@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '@/components/home'
-import about from '@/components/about'
 
 Vue.use(Router)
 const routes =[
+  {
+    path: '/login',
+    component: () => import('views/login/index'),
+    hidden: true
+  },
   {
     path: '/',
     redirect: '/home', //首页重定向
@@ -14,11 +17,6 @@ const routes =[
     path: '/home',
     name: 'home',
     component: home
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: about
   }
 ]
 const router = new Router({
