@@ -6,7 +6,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 import 'assets/css/normalize.css' // A modern alternative to CSS resets
-import 'assets/styles/index.scss' //global css
+import './assets/styles/index.scss' //global css
 
 Vue.config.productionTip = false
 Vue.use(ElementUI,{locale});

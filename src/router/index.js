@@ -4,19 +4,20 @@ import Router from 'vue-router'
 Vue.use(Router)
 const routes =[
   {
+    path: '/',
+    redirect: '/login', //首页重定向
+  },
+  {
     path: '/login',
+    meta: { title: '用户登录' },
     component: () => import('views/login/index'),
     hidden: true
   },
   {
-    path: '/',
-    redirect: '/home', //首页重定向
-    component: home
-  },
-  {
     path: '/home',
     name: 'home',
-    component: home
+    component: () => import('views/home/index'),
+    meta: { title: '首页' }
   }
 ]
 const router = new Router({
