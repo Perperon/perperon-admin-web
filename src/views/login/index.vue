@@ -7,9 +7,9 @@
                ref="loginForm"
                label-position="left">
         <div style="text-align: center">
-          <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
+          <svg-icon icon-class="login" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
         </div>
-        <h2 class="login-title color-main">电商后台登录</h2>
+        <h2 class="login-title color-main">后台登录</h2>
         <el-form-item prop="username">
           <el-input name="username"
                     type="text"
@@ -17,7 +17,7 @@
                     autoComplete="on"
                     placeholder="请输入用户名">
           <span slot="prefix">
-            <svg-icon icon-class="user" class="color-main"></svg-icon>
+            <svg-icon icon-class="username" class="color-main"></svg-icon>
           </span>
           </el-input>
         </el-form-item>
@@ -32,7 +32,7 @@
             <svg-icon icon-class="password" class="color-main"></svg-icon>
           </span>
             <span slot="suffix" @click="showPwd">
-            <svg-icon icon-class="eye" class="color-main"></svg-icon>
+            <svg-icon :icon-class="openEye" class="color-main"></svg-icon>
           </span>
           </el-input>
         </el-form-item>
@@ -40,9 +40,6 @@
           <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
             登录
           </el-button>
-<!--          <el-button style="width: 45%" type="primary" @click.native.prevent="handleTry">
-            获取体验账号
-          </el-button>-->
         </el-form-item>
       </el-form>
     </el-card>
@@ -81,6 +78,7 @@ export default {
       },
       loading: false,
       pwdType: 'password',
+      openEye: 'eye',
       dialogVisible:false,
       supportDialogVisible:false
     }
@@ -99,8 +97,10 @@ export default {
     showPwd() {
       if (this.pwdType === 'password') {
         this.pwdType = ''
+        this.openEye = 'open-eye'
       } else {
         this.pwdType = 'password'
+        this.openEye = 'eye'
       }
     },
     handleLogin() {
