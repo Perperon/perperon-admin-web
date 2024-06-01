@@ -43,12 +43,14 @@
         </el-form-item>
       </el-form>
     </el-card>
+    <img :src="loginCenter" class="login-center-layout">
   </div>
 </template>
 
 <script>
 import {isvalidUsername} from 'utils/validate';
 import {setCookie,getCookie} from 'utils/support';
+import loginCenter from 'assets/images/login_center_bg.png'
 
 export default {
   name: 'login',
@@ -80,7 +82,8 @@ export default {
       pwdType: 'password',
       openEye: 'eye',
       dialogVisible:false,
-      supportDialogVisible:false
+      supportDialogVisible:false,
+      loginCenter: loginCenter
     }
   },
   created() {

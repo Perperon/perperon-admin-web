@@ -9,7 +9,7 @@ const service = axios.create({
 })
 //请求拦截器
 service.interceptors.request.use(res =>{
-  if (store.getters.token) {
+  if (store.getters.token && res.url !== '/account/login') {
     res.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   //做请求前处理
