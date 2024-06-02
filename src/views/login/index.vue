@@ -40,6 +40,9 @@
           <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
             登录
           </el-button>
+          <el-button style="width: 45%" type="reset" @click="resetLogin">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -49,7 +52,7 @@
 
 <script>
 import {isvalidUsername} from 'utils/validate';
-import {setCookie,getCookie} from 'utils/support';
+import {setCookie, getCookie} from 'utils/support';
 import loginCenter from 'assets/images/login_center_bg.png'
 
 export default {
@@ -81,18 +84,18 @@ export default {
       loading: false,
       pwdType: 'password',
       openEye: 'eye',
-      dialogVisible:false,
-      supportDialogVisible:false,
+      dialogVisible: false,
+      supportDialogVisible: false,
       loginCenter: loginCenter
     }
   },
   created() {
     this.loginForm.username = getCookie("username");
     this.loginForm.password = getCookie("password");
-    if(this.loginForm.username === undefined||this.loginForm.username==null||this.loginForm.username===''){
+    if (this.loginForm.username === undefined || this.loginForm.username == null || this.loginForm.username === '') {
       this.loginForm.username = 'admin';
     }
-    if(this.loginForm.password === undefined||this.loginForm.password==null){
+    if (this.loginForm.password === undefined || this.loginForm.password == null) {
       this.loginForm.password = '';
     }
   },
@@ -112,9 +115,9 @@ export default {
           this.loading = true;
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false;
-            setCookie("username",this.loginForm.username,15);
-            setCookie("password",this.loginForm.password,15);
-            this.$router.push({path: '/'})
+            setCookie("username", this.loginForm.username, 15);
+            setCookie("password", this.loginForm.password, 15);
+            this.$router.push({path: '/home'})
           }).catch(() => {
             this.loading = false
           })
@@ -123,6 +126,9 @@ export default {
           return false
         }
       })
+    },
+    resetLogin() {
+      this.$refs.loginForm.resetFields();
     }
   }
 }

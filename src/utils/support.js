@@ -5,7 +5,7 @@ export function getSupport() {
 }
 
 export function setSupport(isSupport) {
-  return Cookies.set(SupportKey, isSupport,{ expires: 3 })
+  return Cookies.set(SupportKey, isSupport,{ expires: 1 })
 }
 
 export function setCookie(key,value,expires) {
