@@ -1,18 +1,42 @@
 <template>
 
-  <el-container  class='home-container'>
+  <el-container class='home-container'>
     <!--头部区-->
     <el-header>
       <div>
-        <svg-icon icon-class="home"  style="width: 56px;height: 56px;color: #a2a9af"></svg-icon>
+        <svg-icon icon-class='home' style='width: 84px;height: 56px;color: #a2a9af'></svg-icon>
         <span>电商后台管理系统</span>
       </div>
-      <el-button @click="logoutAccount">退出登录</el-button>
+      <el-button @click='logoutAccount'>退出登录</el-button>
     </el-header>
     <!--页面主题区-->
     <el-container>
       <!--侧边栏-->
-      <el-aside width='200px'>Aside</el-aside>
+      <el-aside width='200px'>
+        <!--侧边栏 菜单-->
+        <el-menu
+          class='el-menu-vertical-demo'
+          background-color='#545c64'
+          text-color='#fff'
+          active-text-color='#0c7fef'>
+          <!--一级菜单-->
+          <el-submenu :index='item.id' v-for='item in menuList' :key='item.id'>
+            <template slot='title'>
+              <!--图标-->
+              <i class='el-icon-location'></i>
+              <!--文本-->
+              <span>{{item.menuName}}</span>
+            </template>
+            <!--二级菜单-->
+              <el-menu-item :index='subItem.id' v-for='subItem in item.children' :key='subItem.id'>
+                <!--图标-->
+                <i class='el-icon-location'></i>
+                <!--文本-->
+                <span>{{subItem.menuName}}</span>
+              </el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
       <!--内容区域-->
       <el-main>Main</el-main>
     </el-container>
@@ -21,13 +45,16 @@
 </template>
 
 <script>
+import { treeList } from 'api/menu'
 export default {
   name: 'home',
   data() {
-    return {}
+    return {
+      menuList: []
+    }
   },
   created() {
-
+     this.getMenus()
   },
   methods: {
     logoutAccount() {
@@ -35,17 +62,26 @@ export default {
         this.$message.success('退出成功')
         this.$router.push('/')
       })
+    },
+    //获取菜单
+    getMenus(){
+      treeList().then(res => {
+        if (res.code !== 200) return this.$message.error(res.msg)
+        this.menuList = res.data
+        console.log(this.menuList)
+      })
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang='less'>
 .home-container {
   height: 100%;
 }
+
 .el-header {
-  background-color: #8d9299;
+  background-color: #37393b;
   color: #fff;
   line-height: 60px;
   display: flex;
@@ -54,8 +90,17 @@ export default {
   align-items: center;
 }
 
+.el-header div {
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-left: 10px;
+  }
+}
+
 .el-aside {
-  background-color: #d2d8de;
+  background-color: #545c64;
   color: #333;
   text-align: center;
   line-height: 200px;
