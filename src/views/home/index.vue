@@ -12,27 +12,31 @@
     <!--页面主题区-->
     <el-container>
       <!--侧边栏-->
-      <el-aside width='200px'>
+      <el-aside :width="collapse? '64px':'200px'">
+        <!--是否折叠-->
+        <div @click='isCollapse' :class='active'><svg-icon icon-class='collapse' collapse-transition='false'></svg-icon></div>
         <!--侧边栏 菜单-->
         <el-menu
           class='el-menu-vertical-demo'
           background-color='#545c64'
           text-color='#fff'
-          active-text-color='#0c7fef'>
+          active-text-color='#0c7fef' unique-opened :collapse='collapse'>
           <!--一级菜单-->
           <el-submenu :index='item.id' v-for='item in menuList' :key='item.id'>
             <template slot='title'>
               <!--图标-->
-              <i class='el-icon-location'></i>
+              <svg-icon :icon-class='item.icon'></svg-icon>
               <!--文本-->
               <span>{{item.menuName}}</span>
             </template>
             <!--二级菜单-->
               <el-menu-item :index='subItem.id' v-for='subItem in item.children' :key='subItem.id'>
+                <template slot='title'  class='menuItem'>
                 <!--图标-->
-                <i class='el-icon-location'></i>
+                <svg-icon :icon-class='subItem.icon'></svg-icon>
                 <!--文本-->
                 <span>{{subItem.menuName}}</span>
+                </template>
               </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -50,7 +54,9 @@ export default {
   name: 'home',
   data() {
     return {
-      menuList: []
+      menuList: [],
+      collapse: false,
+      active: 'collapse-item'
     }
   },
   created() {
@@ -70,6 +76,10 @@ export default {
         this.menuList = res.data
         console.log(this.menuList)
       })
+    },
+    isCollapse(){
+      this.collapse = !this.collapse
+      this.active=this.collapse===true? 'collapse-item-active':'collapse-item'
     }
   }
 }
@@ -104,6 +114,9 @@ export default {
   color: #333;
   text-align: center;
   line-height: 200px;
+  .el-menu {
+    border-right: none;
+  }
 }
 
 .el-main {
@@ -111,5 +124,20 @@ export default {
   color: #333;
   text-align: center;
   line-height: 160px;
+}
+.el-menu-item {
+  padding: 0 5px;
+}
+.collapse-item{
+  line-height: 24px;
+  width: 23px;
+  position: relative;
+  left: 171px;
+}
+.collapse-item-active{
+  line-height: 24px;
+  width: 23px;
+  position: relative;
+  left: 30px;
 }
 </style>
