@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import layOut from 'views/layout/index'
 Vue.use(Router)
 const routes =[
   {
@@ -16,22 +16,31 @@ const routes =[
   {
     path: '/home',
     name: 'home',
-    redirect: '/welcome',
-    component: () => import('views/home/index'),
+    redirect: '/index',
+    component: layOut,
     meta: { title: '首页' },
     children:[
       {
-        path: '/welcome',
-        name: 'welcome',
-        component: () => import('views/home/components/index')
-      },
-      {
-        path: '/product/list',
-        name: 'product',
-        meta: { title: '商品列表',icon: 'product' },
-        component: () => import('views/product/index')
+        path: '/index',
+        name: 'index',
+        component: () => import('views/home/index')
       }
     ]
+  },
+  {
+    path: '/product',
+    name: 'product',
+    redirect: '/product/list',
+    component: layOut,
+    meta: { title: '商品管理',icon: 'product' },
+    children:[
+      {
+        path: '/product/list',
+        name: 'list',
+        meta: { title: '商品列表',icon: 'product_list' },
+        component: () => import('views/product/index')
+      }
+      ]
   }
 ]
 const router = new Router({

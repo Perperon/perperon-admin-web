@@ -39,5 +39,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+  .el-breadcrumb{
+    margin-bottom: 15px;
+  }
 </style>
