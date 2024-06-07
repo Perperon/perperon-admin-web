@@ -16,8 +16,22 @@ const routes =[
   {
     path: '/home',
     name: 'home',
+    redirect: '/welcome',
     component: () => import('views/home/index'),
-    meta: { title: '首页' }
+    meta: { title: '首页' },
+    children:[
+      {
+        path: '/welcome',
+        name: 'welcome',
+        component: () => import('views/home/components/index')
+      },
+      {
+        path: '/product/list',
+        name: 'product',
+        meta: { title: '商品列表',icon: 'product' },
+        component: () => import('views/product/index')
+      }
+    ]
   }
 ]
 const router = new Router({

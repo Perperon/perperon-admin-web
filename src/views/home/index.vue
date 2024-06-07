@@ -20,7 +20,7 @@
           class='el-menu-vertical-demo'
           background-color='#545c64'
           text-color='#fff'
-          active-text-color='#0c7fef' unique-opened :collapse='collapse'>
+          active-text-color='#0c7fef' unique-opened :collapse='collapse' router :default-active="$route.path">
           <!--一级菜单-->
           <el-submenu :index='item.id' v-for='item in menuList' :key='item.id'>
             <template slot='title'>
@@ -30,7 +30,7 @@
               <span>{{item.menuName}}</span>
             </template>
             <!--二级菜单-->
-              <el-menu-item :index='subItem.id' v-for='subItem in item.children' :key='subItem.id'>
+              <el-menu-item :index="subItem.path" v-for='subItem in item.children' :key='subItem.id'>
                 <template slot='title'  class='menuItem'>
                 <!--图标-->
                 <svg-icon :icon-class='subItem.icon'></svg-icon>
@@ -42,7 +42,9 @@
         </el-menu>
       </el-aside>
       <!--内容区域-->
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view />
+      </el-main>
     </el-container>
   </el-container>
 
