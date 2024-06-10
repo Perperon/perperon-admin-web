@@ -21,3 +21,11 @@ export function getInfo(){
     method: 'post'
   })
 }
+
+export function listByPage(params){
+  return request({
+    url:'/account/listByPage',
+    method: 'get',
+    params: params
+  })
+}

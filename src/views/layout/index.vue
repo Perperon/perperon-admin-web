@@ -18,8 +18,8 @@
         <!--侧边栏 菜单-->
         <el-menu
           class='el-menu-vertical-demo'
-          background-color='#545c64'
-          text-color='#fff'
+          background-color='#26384d'
+          text-color='#dbdbdb'
           active-text-color='#0c7fef' unique-opened :collapse='collapse' router :default-active="$route.path">
           <!--一级菜单-->
           <el-submenu :index='item.path' v-for='item in menuList' :key='item.id'>
@@ -76,7 +76,7 @@ export default {
       treeList().then(res => {
         if (res.code !== 200) return this.$message.error(res.msg)
         this.menuList = res.data
-        console.log(this.menuList)
+        //console.log(this.menuList)
       })
     },
     isCollapse(){
@@ -93,8 +93,8 @@ export default {
 }
 
 .el-header {
-  background-color: #37393b;
-  color: #fff;
+  background-color: #304156;
+  color: #924aa6;
   line-height: 60px;
   display: flex;
   justify-content: space-between;
@@ -112,7 +112,7 @@ export default {
 }
 
 .el-aside {
-  background-color: #545c64;
+  background-color: #26384d;
   color: #333;
   text-align: center;
   line-height: 200px;
@@ -125,7 +125,6 @@ export default {
   background-color: #E9EEF3;
   color: #333;
   text-align: center;
-  line-height: 160px;
 }
 .el-menu-item {
   padding: 0 5px;

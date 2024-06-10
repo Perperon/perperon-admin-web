@@ -36,11 +36,26 @@ const routes =[
     children:[
       {
         path: '/product/list',
-        name: 'list',
+        name: 'productList',
         meta: { title: '商品列表',icon: 'product_list' },
         component: () => import('views/product/index')
       }
       ]
+  },
+  {
+    path: '/account',
+    name: 'account',
+    redirect: '/account/list',
+    component: layOut,
+    meta: { title: '用户管理',icon: 'user' },
+    children:[
+      {
+        path: '/account/list',
+        name: 'accountList',
+        meta: { title: '用户列表',icon: 'user_list' },
+        component: () => import('views/account/index')
+      }
+    ]
   }
 ]
 const router = new Router({
