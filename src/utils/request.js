@@ -34,7 +34,7 @@ service.interceptors.response.use(response =>{
     })
 
     // 401:未登录;
-    /*if (res.code === 401) {
+    if (res.code === 401) {
       MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
         confirmButtonText: '重新登录',
         cancelButtonText: '取消',
@@ -44,8 +44,8 @@ service.interceptors.response.use(response =>{
           location.reload()// 为了重新实例化vue-router对象 避免bug
         })
       })
-    }*/
-    return Promise.reject('error')
+    }
+    return Promise.reject(res)
   } else {
     return response.data
   }
