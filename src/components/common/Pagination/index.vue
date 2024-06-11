@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pagination-container">
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -20,19 +20,13 @@ export default {
       type: Function,
       default: undefined
     },
-    dataQuery:{
+    queryInfo:{
       type: Object,
       default: null
     }
   },
   data() {
     return {
-      queryInfo:{
-        name: null,
-        total: 0,
-        pageNum: 1,
-        pageSize: 10
-      }
     }
   },
   methods:{
@@ -54,8 +48,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-pagination{
-  margin-top: 10px;
-  float: left;
-}
 </style>

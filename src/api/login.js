@@ -29,3 +29,11 @@ export function listByPage(params){
     params: params
   })
 }
+
+export function update(data){
+  return request({
+    url:'/account/update',
+    method: 'put',
+    data: data
+  })
+}

@@ -67,7 +67,7 @@
         <el-table-column label='状态'  align="center">
           <template slot-scope="scope">
             <el-switch
-              v-model="scope.row.status">
+              v-model="scope.row.status" @change="updateStatus(scope.row.id,scope.row.status)">
             </el-switch>
           </template>
         </el-table-column>
@@ -97,13 +97,13 @@
         </el-table-column>
       </el-table>
     </div>
-    <Pagination @query="initList" ></Pagination>
+    <Pagination :query-info="params" @query="initList"></Pagination>
   </div>
 </template>
 
 <script>
 import Breadcrumb from 'components/common/Breadcrumb'
-import { listByPage } from 'api/login'
+import { listByPage,update } from 'api/login'
 import Pagination from 'components/common/Pagination'
 
 export default {
@@ -111,7 +111,12 @@ export default {
   data() {
     return {
       accountData: [],
-      multipleSelection: []
+      multipleSelection: [],
+      params: {
+        total: 0,
+        pageNum: 1,
+        pageSize: 10
+      }
     }
   },
   created() {
@@ -126,12 +131,19 @@ export default {
     },
     initList(queryInfo) {
       listByPage(queryInfo).then(res => {
-        if (res.code !== 200) return this.$message.error(res.msg)
+        if (res.code !== 200) return this.$message.error(res.message)
         this.accountData = res.data.list
-        queryInfo.total = res.data.total
-        queryInfo.pageSize = res.data.pageSize;
+        this.params.total = res.data.total
+        this.params.pageSize = res.data.pageSize;
       }).catch(err => {
         this.$message.error(err)
+      })
+    },
+    updateStatus(id,status){
+      //console.log(data)
+      update({id: id,status: status}).then(res =>{
+        if (res.code !== 200) return this.$message.error(res.message)
+        this.$message.success(res.message)
       })
     },
     handleSelectionChange(val) {
