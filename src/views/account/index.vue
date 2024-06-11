@@ -93,75 +93,49 @@
                 type="warning" round
               ><svg-icon icon-class='roles'></svg-icon></el-button>
             </el-tooltip>
-
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <div>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="queryInfo.pageNum"
-        :page-sizes="[1, 2, 4, 5, 10]"
-        :page-size="queryInfo.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
-    </div>
+    <Pagination @query="initList" ></Pagination>
   </div>
 </template>
 
 <script>
 import Breadcrumb from 'components/common/Breadcrumb'
 import { listByPage } from 'api/login'
+import Pagination from 'components/common/Pagination'
 
 export default {
   name: 'account',
   data() {
     return {
       accountData: [],
-      multipleSelection: [],
-      queryInfo:{
-        pageNum: 1,
-        pageSize: 10
-      },
-      total: 0
+      multipleSelection: []
     }
   },
   created() {
-    this.accountList()
+    this.initList()
   },
   components: {
-    Breadcrumb
+    Breadcrumb,
+    Pagination
   },
   methods: {
     addBrand() {
     },
-    accountList() {
-      listByPage(this.queryInfo).then(res => {
+    initList(queryInfo) {
+      listByPage(queryInfo).then(res => {
         if (res.code !== 200) return this.$message.error(res.msg)
         this.accountData = res.data.list
-        this.total = res.data.total
-        this.pageSize = res.data.pageSize;
-        console.log(res)
+        queryInfo.total = res.data.total
+        queryInfo.pageSize = res.data.pageSize;
       }).catch(err => {
-        console.log(err)
+        this.$message.error(err)
       })
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-    },
-    handleSizeChange(val) {
-      this.queryInfo.pageNum = 1;
-      this.queryInfo.pageSize = val;
-      this.accountList();
-      //console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      this.queryInfo.pageNum = val;
-      this.accountList();
-      //console.log(`当前页: ${val}`);
     }
   }
 }
