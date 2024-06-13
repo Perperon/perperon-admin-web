@@ -5,8 +5,8 @@
     <el-card class='box-card'>
       <el-row :gutter='20'>
         <el-col :span='6'>
-          <el-input placeholder='请输入用户名搜索'>
-            <el-button slot='append' icon='el-icon-search'></el-button>
+          <el-input placeholder='请输入用户名搜索' v-model="params.username" clearable @clear="searchAccountList">
+            <el-button @click="searchAccountList" slot='append' icon='el-icon-search'></el-button>
           </el-input>
         </el-col>
       </el-row>
@@ -105,6 +105,7 @@
 import Breadcrumb from 'components/common/Breadcrumb'
 import { listByPage,update } from 'api/login'
 import Pagination from 'components/common/Pagination'
+import params from 'utils/query'
 
 export default {
   name: 'account',
@@ -112,11 +113,7 @@ export default {
     return {
       accountData: [],
       multipleSelection: [],
-      params: {
-        total: 0,
-        pageNum: 1,
-        pageSize: 10
-      }
+      params: params
     }
   },
   created() {
@@ -134,10 +131,13 @@ export default {
         if (res.code !== 200) return this.$message.error(res.message)
         this.accountData = res.data.list
         this.params.total = res.data.total
-        this.params.pageSize = res.data.pageSize;
+        //this.params.pageSize = res.data.pageSize;
       }).catch(err => {
         this.$message.error(err)
       })
+    },
+    searchAccountList(){
+      this.initList(this.params);
     },
     updateStatus(id,status){
       //console.log(data)
