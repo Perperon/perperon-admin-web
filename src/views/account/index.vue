@@ -19,7 +19,7 @@
           <span style='float: left;position: relative;left: 4px'>数据列表</span>
         </el-col>
         <el-col :span='20'>
-          <el-button class='btn-add' @click='dialogVisible = true' size='mini'>
+          <el-button class='btn-add' @click='addDialog' size='mini'>
             添加
           </el-button>
         </el-col>
@@ -79,6 +79,7 @@
               <el-button
                 size='mini'
                 type='primary' round
+                @click='isEdit = true'
               >
                 <svg-icon icon-class='edit'></svg-icon>
               </el-button>
@@ -104,37 +105,7 @@
       </el-table>
     </div>
     <Pagination :query-info='params' @query='initList'></Pagination>
-
-    <!--添加信息框-->
-    <el-dialog
-      title='添加用户'
-      :visible.sync='dialogVisible'
-      width='40%'
-      :before-close='handleClose'>
-      <!--内容区-->
-      <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
-        <el-form-item label='用户名:' prop='username'>
-          <el-input v-model='addForm.username' ></el-input>
-        </el-form-item>
-        <el-form-item label='昵称:' prop='nickName'>
-          <el-input v-model='addForm.nickName' ></el-input>
-        </el-form-item>
-        <el-form-item label='邮箱:' prop='email'>
-          <el-input v-model='addForm.email' ></el-input>
-        </el-form-item>
-        <el-form-item label='是否启用:' prop='status'>
-          <el-radio-group v-model="addForm.status">
-            <el-radio :label="1">启用</el-radio>
-            <el-radio :label="0">禁用</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <!--底部区-->
-      <span slot='footer' class='dialog-footer'>
-    <el-button @click='dialogVisible = false'>取 消</el-button>
-    <el-button type='primary' @click='dialogVisible = false'>确 定</el-button>
-  </span>
-    </el-dialog>
+    <login-details :is-edit='isEdit' :is-dialog='isDialog' @dislogDetails = 'handleDialog'></login-details>
   </div>
 </template>
 
@@ -143,51 +114,28 @@ import Breadcrumb from 'components/common/Breadcrumb'
 import { listByPage, update } from 'api/login'
 import Pagination from 'components/common/Pagination'
 import params from 'utils/query'
+import LoginDetails from './components/LoginDetails'
 
 export default {
   name: 'account',
   data() {
     return {
-      dialogVisible: false,
-      addForm: {
-        username: '',
-        nickName: '',
-        status: 1,
-        email: ''
-      },
-      addFormRules: {
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }],
-        nickName: [
-          { required: true, message: '请输入你的昵称', trigger: 'blur' },
-          { min: 1, max: 30, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]
-
-      },
       accountData: [],
       multipleSelection: [],
-      params: params
+      params: params,
+      isEdit: false,
+      isDialog: false
     }
   },
   created() {
     this.initList()
   },
   components: {
+    LoginDetails,
     Breadcrumb,
     Pagination
   },
   methods: {
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {
-        })
-    },
     initList(queryInfo) {
       listByPage(queryInfo).then(res => {
         if (res.code !== 200) return this.$message.error(res.message)
@@ -210,6 +158,15 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    addDialog(){
+      this.isDialog = true;
+      this.isEdit = false;
+    },
+    handleDialog(flag){
+      console.log(flag);
+      this.isDialog = flag;
+      this.initList(this.params)
     }
   }
 }
@@ -239,12 +196,5 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
-}
-.el-form-item {
-  font-family: 微软雅黑;
-  font-weight: bold;
-}
-.el-radio-group {
-  margin-right: 412px;
 }
 </style>

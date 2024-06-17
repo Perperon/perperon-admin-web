@@ -37,3 +37,11 @@ export function update(data){
     data: data
   })
 }
+
+export function create(data){
+  return request({
+    url:'/account/create',
+    method: 'post',
+    data: data
+  })
+}

@@ -54,6 +54,11 @@ const routes =[
         name: 'accountList',
         meta: { title: '用户列表',icon: 'user_list' },
         component: () => import('views/account/index')
+      },{
+        path: '/account/add',
+        name: 'accountAdd',
+        meta: { title: '用户添加',icon: 'user_add' },
+        component: () => import('views/account/components/LoginDetails')
       }
     ]
   }
