@@ -56,6 +56,27 @@ const routes =[
         component: () => import('views/account/index')
       }
     ]
+  },
+  {
+    path: '/auth',
+    name: 'auth',
+    redirect: '/auth/list',
+    component: layOut,
+    meta: { title: '权限管理',icon: 'auth' },
+    children:[
+      {
+        path: '/menu/list',
+        name: 'menuList',
+        meta: { title: '菜单列表',icon: 'menu_list' },
+        component: () => import('views/auth/menu/index')
+      },
+      {
+        path: '/role/list',
+        name: 'roleList',
+        meta: { title: '角色列表',icon: 'role_list' },
+        component: () => import('views/auth/role/index')
+      }
+    ]
   }
 ]
 const router = new Router({

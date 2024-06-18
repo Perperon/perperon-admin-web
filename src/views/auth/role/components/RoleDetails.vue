@@ -1,21 +1,18 @@
 <template>
   <!--添加信息框-->
   <el-dialog
-    title='添加用户'
+    title='添加角色'
     :visible.sync='dialogVisible'
     width='40%'
     :before-close='handleClose'
     @close='addDialogClosed'>
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
-      <el-form-item label='用户名:' prop='username'>
-        <el-input v-model='addForm.username' :disabled="isEdit"></el-input>
+      <el-form-item label='角色名:' prop='name'>
+        <el-input v-model='addForm.name' :disabled="isEdit"></el-input>
       </el-form-item>
-      <el-form-item label='昵称:' prop='nickName'>
-        <el-input v-model='addForm.nickName' ></el-input>
-      </el-form-item>
-      <el-form-item label='邮箱:' prop='email'>
-        <el-input v-model='addForm.email' ></el-input>
+      <el-form-item label='编号:' prop='code'>
+        <el-input v-model='addForm.code' ></el-input>
       </el-form-item>
       <el-form-item label='是否启用:' prop='status'>
         <el-radio-group v-model="addForm.status">
@@ -33,31 +30,26 @@
 </template>
 
 <script>
-import { update, create, getById } from 'api/login'
+import { update, create, getById } from 'api/roles'
 
 const defaultFrom = {
-  username: '',
-  nickName: '',
-  status: true,
-  email: ''
+  name: '',
+  code: '',
+  status: true
 }
 export default {
-  name: 'LoginDetails',
+  name: 'RoleDetails',
   data () {
     return {
       dialogVisible: false,
       addForm: Object.assign({},defaultFrom),
       addFormRules: {
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+        name: [
+          { required: true, message: '请输入角色', trigger: 'blur' },
           { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }],
-        nickName: [
-          { required: true, message: '请输入你的昵称', trigger: 'blur' },
-          { min: 1, max: 30, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]
-
+        code: [
+          { required: true, message: '请输入编码', trigger: 'blur' },
+          { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }]
       }
     }
   },

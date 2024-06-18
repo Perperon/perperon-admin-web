@@ -112,7 +112,7 @@
 
 <script>
 import Breadcrumb from 'components/common/Breadcrumb'
-import { listByPage, update,deleteAccount } from 'api/login'
+import { listByPage, update, deleteById } from 'api/login'
 import Pagination from 'components/common/Pagination'
 import params from 'utils/query'
 import LoginDetails from './components/LoginDetails'
@@ -143,7 +143,6 @@ export default {
         if (res.code !== 200) return this.$message.error(res.message)
         this.accountData = res.data.list
         this.params.total = res.data.total
-        //this.params.pageSize = res.data.pageSize;
       }).catch(err => {
         this.$message.error(err)
       })
@@ -181,7 +180,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteAccount(id).then(response => {
+        deleteById(id).then(response => {
           this.$message({
             message: '删除成功',
             type: 'success',
