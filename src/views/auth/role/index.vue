@@ -28,15 +28,30 @@
           :default-sort="{prop: 'created', order: 'descending'}">
           <el-table-column type="expand">
             <template slot-scope="scope">
-              <el-row v-for="(item,index) in scope.row">
+              <el-row :class="['auth_bottom',index===0 ? 'auth_top' : '','auth_center']" v-for="(item,index) in scope.row.children" :key='item.id'>
                 <!--一级权限-->
-                <el-col></el-col>
-                <!--二级权限-->
-                <el-col></el-col>
-                <!--三级权限-->
-                <el-col></el-col>
+                <el-col :span='5'>
+                  <el-tag>{{item.menuName}}</el-tag>
+                  <i class="el-icon-caret-right"></i>
+                </el-col>
+                <!--二、三级权限-->
+                <el-col :span='19'>
+                  <el-row :class="[indexOne!==0 ? 'auth_top':'','auth_center']" v-for='(child,indexOne) in item.children' :key="child.id">
+                    <el-col :span='6'>
+                      <el-tag type='success'>{{child.menuName}}</el-tag>
+                      <i class="el-icon-caret-right"></i>
+                    </el-col>
+                    <el-col :span='18'>
+                     <el-tag v-for='(itera,indexTwo) in child.children' :key='itera.id' type='warning'>
+                       {{itera.menuName}}
+                     </el-tag>
+                    </el-col>
+                  </el-row>
+                </el-col>
               </el-row>
             </template>
+          </el-table-column>
+          <el-table-column type='selection' width='55'>
           </el-table-column>
           <el-table-column prop="name" label="角色名称" align='center'>
           </el-table-column>
@@ -165,5 +180,17 @@ export default {
 </script>
 
 <style scoped>
-
+.el-tag{
+  margin: 7px;
+}
+.auth_top{
+  border-top: 1px solid #eee;
+}
+.auth_bottom{
+  border-bottom: 1px solid #eee;
+}
+.auth_center{
+  display: flex;
+  align-items: center;
+}
 </style>
