@@ -140,6 +140,23 @@ a:hover {
   font-size: 13px;
   color: #606266;
 }
+
+//列表样式
+.from-table {
+  font-size: 0;
+}
+
+.from-table label {
+  width: 90px;
+  color: #99a9bf;
+}
+
+.from-table .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+
 //表单样式
 .el-form-item {
   font-family: 微软雅黑;

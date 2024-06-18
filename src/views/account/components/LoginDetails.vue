@@ -9,7 +9,7 @@
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
       <el-form-item label='用户名:' prop='username'>
-        <el-input v-model='addForm.username' ></el-input>
+        <el-input v-model='addForm.username' :disabled="isEdit"></el-input>
       </el-form-item>
       <el-form-item label='昵称:' prop='nickName'>
         <el-input v-model='addForm.nickName' ></el-input>
@@ -19,8 +19,8 @@
       </el-form-item>
       <el-form-item label='是否启用:' prop='status'>
         <el-radio-group v-model="addForm.status">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
+          <el-radio :label="true">启用</el-radio>
+          <el-radio :label="false">禁用</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -33,18 +33,20 @@
 </template>
 
 <script>
-import { update, create } from 'api/login'
+import { update, create, getAccount } from 'api/login'
+
+const defaultFrom = {
+  username: '',
+  nickName: '',
+  status: true,
+  email: ''
+}
 export default {
   name: 'LoginDetails',
   data () {
     return {
       dialogVisible: false,
-      addForm: {
-        username: '',
-        nickName: '',
-        status: 1,
-        email: ''
-      },
+      addForm: Object.assign({},defaultFrom),
       addFormRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -62,6 +64,13 @@ export default {
   watch: {
     isDialog(val) {
       this.dialogVisible = val
+      if (this.isEdit){
+        getAccount(this.id).then(response => {
+          this.addForm = response.data
+        })
+      }else{
+        this.addForm = Object.assign({},defaultFrom)
+      }
     }
   },
   props: {
@@ -72,6 +81,10 @@ export default {
     isDialog:{
       type: Boolean,
       default: false
+    },
+    id:{
+      type: String,
+      default: null,
     }
   },
   methods: {

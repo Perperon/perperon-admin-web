@@ -45,3 +45,17 @@ export function create(data){
     data: data
   })
 }
+
+export function getAccount(id){
+  return request({
+    url:'/account/getById/'+id,
+    method: 'get'
+  })
+}
+
+export function deleteAccount(id){
+  return request({
+    url:'/account/delete/'+id,
+    method: 'delete'
+  })
+}

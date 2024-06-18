@@ -37,7 +37,7 @@
         :default-sort="{prop: 'created', order: 'descending'}">
         <el-table-column type='expand'>
           <template slot-scope='props'>
-            <el-form label-position='left' inline class='demo-table-expand'>
+            <el-form label-position='left' inline class='from-table'>
               <el-form-item label='用户账号'>
                 <span>{{ props.row.username }}</span>
               </el-form-item>
@@ -79,7 +79,7 @@
               <el-button
                 size='mini'
                 type='primary' round
-                @click='isEdit = true'
+                @click='editDialog(scope.$index,scope.row.id)'
               >
                 <svg-icon icon-class='edit'></svg-icon>
               </el-button>
@@ -88,6 +88,7 @@
               <el-button
                 size='mini'
                 type='danger' round
+                @click="deleteHandler(scope.$index,scope.row.id)"
               >
                 <svg-icon icon-class='delete'></svg-icon>
               </el-button>
@@ -105,13 +106,13 @@
       </el-table>
     </div>
     <Pagination :query-info='params' @query='initList'></Pagination>
-    <login-details :is-edit='isEdit' :is-dialog='isDialog' @dislogDetails = 'handleDialog'></login-details>
+    <login-details :is-edit='isEdit' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></login-details>
   </div>
 </template>
 
 <script>
 import Breadcrumb from 'components/common/Breadcrumb'
-import { listByPage, update } from 'api/login'
+import { listByPage, update,deleteAccount } from 'api/login'
 import Pagination from 'components/common/Pagination'
 import params from 'utils/query'
 import LoginDetails from './components/LoginDetails'
@@ -124,7 +125,8 @@ export default {
       multipleSelection: [],
       params: params,
       isEdit: false,
-      isDialog: false
+      isDialog: false,
+      id: null
     }
   },
   created() {
@@ -150,7 +152,6 @@ export default {
       this.initList(this.params);
     },
     updateStatus(id, status) {
-      //console.log(data)
       update({ id: id, status: status }).then(res => {
         if (res.code !== 200) return this.$message.error(res.message)
         this.$message.success(res.message)
@@ -163,10 +164,32 @@ export default {
       this.isDialog = true;
       this.isEdit = false;
     },
+    editDialog(index,id){
+      this.isDialog = true;
+      this.isEdit = true;
+      this.id = id;
+    },
     handleDialog(flag){
       console.log(flag);
       this.isDialog = flag;
+      this.isEdit = flag;
       this.initList(this.params)
+    },
+    deleteHandler(index,id){
+      this.$confirm('确认要删除此用户', '删除提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteAccount(id).then(response => {
+          this.$message({
+            message: '删除成功',
+            type: 'success',
+            duration: 1000
+          });
+          this.initList(this.params);
+        });
+      });
     }
   }
 }
@@ -181,20 +204,5 @@ export default {
   height: 60px;
   float: left;
   text-align: start;
-}
-
-.demo-table-expand {
-  font-size: 0;
-}
-
-.demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
 }
 </style>
