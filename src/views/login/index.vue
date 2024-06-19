@@ -150,7 +150,7 @@ export default {
 
 .login-center-layout {
   background: #409EFF;
-  width: auto;
+  width: 100%;
   height: auto;
   max-width: 100%;
   max-height: 100%;
