@@ -10,7 +10,7 @@
       <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
           <!--头像-->
-          <el-avatar fit='scale-down' :size="50" :src="base+$store.getters.avatar"></el-avatar>
+          <el-avatar fit='scale-down' :size="50" :src="avatar"></el-avatar>
           &nbsp;&nbsp;{{$store.getters.name}}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
@@ -70,7 +70,7 @@ export default {
       menuList: [],
       collapse: false,
       active: 'collapse-item',
-      base: process.env.BASE_API
+      avatar: process.env.BASE_API + this.$store.getters.avatar
     }
   },
   created() {
@@ -87,7 +87,6 @@ export default {
     getMenus(){
       this.$store.dispatch("GetInfo").then(res => {
         if (res.code !== 200) return this.$message.error(res.msg)
-        console.log(res.data)
         this.menuList = res.data.menus
       })
     },
