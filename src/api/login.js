@@ -17,8 +17,8 @@ export function logout(){
 
 export function getInfo(){
   return request({
-    url:'/account/logout',
-    method: 'post'
+    url:'/account/getInfo',
+    method: 'get'
   })
 }
 

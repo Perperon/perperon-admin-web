@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { treeList } from 'api/menu'
+import { getInfo } from 'api/login'
 export default {
   name: 'layout',
   data() {
@@ -73,10 +73,10 @@ export default {
     },
     //获取菜单
     getMenus(){
-      treeList().then(res => {
+      getInfo().then(res => {
         if (res.code !== 200) return this.$message.error(res.msg)
-        this.menuList = res.data
-        //console.log(this.menuList)
+        console.log(res.data)
+        //this.menuList = res.data
       })
     },
     isCollapse(){
