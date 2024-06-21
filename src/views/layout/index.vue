@@ -7,7 +7,19 @@
         <svg-icon icon-class='home' style='width: 84px;height: 56px;color: #a2a9af'></svg-icon>
         <span>电商后台管理系统</span>
       </div>
-      <el-button @click='logoutAccount'>退出登录</el-button>
+      <el-dropdown @command="handleCommand">
+        <span class="el-dropdown-link">
+          <!--头像-->
+          <el-avatar fit='scale-down' :size="50" :src="base+$store.getters.avatar"></el-avatar>
+          &nbsp;&nbsp;{{$store.getters.name}}
+          <i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>首页</el-dropdown-item>
+          <el-dropdown-item>切换角色</el-dropdown-item>
+          <el-dropdown-item command='logout' divided>退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </el-header>
     <!--页面主题区-->
     <el-container>
@@ -51,14 +63,14 @@
 </template>
 
 <script>
-import { getInfo } from 'api/login'
 export default {
   name: 'layout',
   data() {
     return {
       menuList: [],
       collapse: false,
-      active: 'collapse-item'
+      active: 'collapse-item',
+      base: process.env.BASE_API
     }
   },
   created() {
@@ -73,15 +85,20 @@ export default {
     },
     //获取菜单
     getMenus(){
-      getInfo().then(res => {
+      this.$store.dispatch("GetInfo").then(res => {
         if (res.code !== 200) return this.$message.error(res.msg)
         console.log(res.data)
-        //this.menuList = res.data
+        this.menuList = res.data.menus
       })
     },
     isCollapse(){
       this.collapse = !this.collapse
       this.active=this.collapse===true? 'collapse-item-active':'collapse-item'
+    },
+    handleCommand(command) {
+      if (command === 'logout') {
+        this.logoutAccount()
+      }
     }
   }
 }
@@ -140,5 +157,11 @@ export default {
   width: 23px;
   position: relative;
   left: 30px;
+}
+.el-dropdown-link{
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
 }
 </style>

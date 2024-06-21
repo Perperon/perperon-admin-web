@@ -27,7 +27,6 @@ const account = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const data = response.data
@@ -51,7 +50,7 @@ const account = {
           } else {
             reject('getInfo: auth must be a non-null array !')
           }
-          commit('SET_NAME', data.username)
+          commit('SET_NAME', data.nickName)
           commit('SET_AVATAR', data.icon)
           resolve(response)
         }).catch(error => {

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import layOut from 'views/layout/index'
 Vue.use(Router)
-const routes =[
+export const routes =[
   {
     path: '/',
     redirect: '/login', //首页重定向
@@ -27,7 +27,7 @@ const routes =[
       }
     ]
   },
-  {
+  /*{
     path: '/product',
     name: 'product',
     redirect: '/product/list',
@@ -77,7 +77,7 @@ const routes =[
         component: () => import('views/auth/role/index')
       }
     ]
-  }
+  }*/
 ]
 const router = new Router({
   routes,

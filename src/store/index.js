@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import account from './modules/account'
 import getters from './getters/index'
+import permission from './modules/permission'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -18,7 +19,8 @@ const store = new Vuex.Store({
   getters,
   //划分模块
   modules:{
-    account
+    account,
+    permission
   }
 })
 
