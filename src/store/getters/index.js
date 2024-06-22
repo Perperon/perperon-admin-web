@@ -5,7 +5,7 @@ const index = {
   avatar: state => state.account.avatar,
   name: state => state.account.name,
   roles: state => state.account.roles,
-  addRouters: state => state.permission.addRouters,
-  routers: state => state.permission.routers
+  menus: state => state.account.menus,
+  addRouters: state => state.permission.addRouters
 }
 export default index

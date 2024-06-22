@@ -6,7 +6,8 @@ const account = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    menus: []
   },
 
   mutations: {
@@ -21,7 +22,10 @@ const account = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
-    }
+    },
+    SET_MENUS: (state, menus) => {
+      state.menus = menus
+    },
   },
 
   actions: {
@@ -50,8 +54,10 @@ const account = {
           } else {
             reject('getInfo: auth must be a non-null array !')
           }
+          console.log(data)
           commit('SET_NAME', data.nickName)
           commit('SET_AVATAR', data.icon)
+          commit('SET_MENUS', data.menus)
           resolve(response)
         }).catch(error => {
           reject(error)

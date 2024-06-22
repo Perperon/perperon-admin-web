@@ -85,10 +85,7 @@ export default {
     },
     //获取菜单
     getMenus(){
-      this.$store.dispatch("GetInfo").then(res => {
-        if (res.code !== 200) return this.$message.error(res.msg)
-        this.menuList = res.data.menus
-      })
+      this.menuList = this.$store.getters.menus
     },
     isCollapse(){
       this.collapse = !this.collapse
@@ -159,8 +156,8 @@ export default {
 }
 .el-dropdown-link{
   cursor: pointer;
-  color: var(--el-color-primary);
   display: flex;
   align-items: center;
+  color: #dde1e5;
 }
 </style>
