@@ -5,7 +5,7 @@ function hasPermission(menu, parentName) {
   const route = {
         path: menu.path,
         name: menu.menuName,
-        meta: { parentName: parentName }
+        meta: { parentName: parentName ,title: menu.menuName}
   }
     route.component = (resolve)=> require([`@/views${menu.component}`], resolve)
   return route;

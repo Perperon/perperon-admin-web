@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import layOut from 'views/layout/index'
 Vue.use(Router)
+
+
 export const routes =[
   {
     path: '/',

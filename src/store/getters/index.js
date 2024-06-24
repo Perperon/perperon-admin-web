@@ -6,6 +6,8 @@ const index = {
   name: state => state.account.name,
   roles: state => state.account.roles,
   menus: state => state.account.menus,
-  addRouters: state => state.permission.addRouters
+  addRouters: state => state.permission.addRouters,
+  getEditableTabs: state => state.editableTabs,
+  getEditableTabsValue: state => state.editableTabsValue
 }
 export default index

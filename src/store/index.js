@@ -8,9 +8,34 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   //状态
   state:{
+    editableTabsValue: '/index',
+    editableTabs:[
+      {
+        title: '首页',
+        name: '/index'
+      }
+    ]
   },
   //state里面的属性需用mutations来改变
   mutations:{
+    SET_TABS:(state,tab) =>{
+      if (state.editableTabs.findIndex(e=>e.name===tab.path)===-1){
+        state.editableTabs.push({
+          title: tab.menuName,
+          name: tab.path
+        })
+      }
+      state.editableTabsValue = tab.path
+    },
+    RESET_TABS:(state) =>{
+      state.editableTabsValue = '/index';
+      state.editableTabs=[
+        {
+          title: '首页',
+          name: '/index'
+        }
+      ]
+    }
   },
   //异步操作actions
   actions:{

@@ -42,7 +42,7 @@
               <span>{{item.menuName}}</span>
             </template>
             <!--二级菜单-->
-            <el-menu-item :index="subItem.path" v-for='subItem in item.children' :key='subItem.id'>
+            <el-menu-item :index="subItem.path" v-for='subItem in item.children' :key='subItem.id' @click='openTab(subItem)'>
               <template slot='title'  class='menuItem'>
                 <!--图标-->
                 <svg-icon :icon-class='subItem.icon'></svg-icon>
@@ -53,18 +53,30 @@
           </el-submenu>
         </el-menu>
       </el-aside>
+      <el-container>
       <!--内容区域-->
       <el-main>
-        <router-view />
+        <tabs-page></tabs-page>
+        <router-view/>
       </el-main>
+      <el-footer>
+          <div>
+            Copyright @2024-2030 个人学习项目版权 版权所有@Perperon &nbsp;&nbsp;<a href='http://www.github.com' target='_blank'>github官网</a>
+          </div>
+      </el-footer>
+    </el-container>
     </el-container>
   </el-container>
 
 </template>
 
 <script>
+import TabsPage from 'components/common/TabsPage'
 export default {
   name: 'layout',
+  components:{
+    TabsPage
+  },
   data() {
     return {
       menuList: [],
@@ -95,6 +107,9 @@ export default {
       if (command === 'logout') {
         this.logoutAccount()
       }
+    },
+    openTab(item){
+      this.$store.commit("SET_TABS",item)
     }
   }
 }
@@ -159,5 +174,11 @@ export default {
   display: flex;
   align-items: center;
   color: #dde1e5;
+}
+.el-footer{
+  background-color: #E9EEF3;
+  padding: 20px;
+  display: flex;
+  align-items: center;
 }
 </style>

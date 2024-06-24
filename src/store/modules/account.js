@@ -71,6 +71,7 @@ const account = {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('RESET_TABS')
           removeToken()
           resolve()
         }).catch(error => {
