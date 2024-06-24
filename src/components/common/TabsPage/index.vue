@@ -40,7 +40,6 @@ export default {
       this.tableTabs = tabs.filter(tab => tab.name !== targetName);
     },
     handleClick(target) {
-      console.log(target)
       this.$router.push({path:target._props.name})
     }
   },
@@ -49,13 +48,11 @@ export default {
       deep: true,
       immediate: true,
       handler: function (val,oldValue) {
-        console.log('tabsValue被修改了', val, oldValue)
         this.tabsValue = val
-        this.$router.push({path:val})
+        //this.$router.push({path:val})
       }
     },
     getEditableTabs(newVal,oldVal){
-      console.log('tableTabs被修改了', newVal, oldVal)
       this.tableTabs = newVal
     }
   }

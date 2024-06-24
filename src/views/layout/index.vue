@@ -56,6 +56,7 @@
       <el-container>
       <!--内容区域-->
       <el-main>
+        <breadcrumb></breadcrumb>
         <tabs-page></tabs-page>
         <router-view/>
       </el-main>
@@ -72,10 +73,12 @@
 
 <script>
 import TabsPage from 'components/common/TabsPage'
+import Breadcrumb from 'components/common/Breadcrumb'
 export default {
   name: 'layout',
   components:{
-    TabsPage
+    TabsPage,
+    Breadcrumb
   },
   data() {
     return {

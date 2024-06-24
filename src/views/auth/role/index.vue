@@ -1,6 +1,5 @@
 <template>
   <div class='app-container'>
-    <breadcrumb></breadcrumb>
     <!--卡片视图-操作区-->
     <el-card class='operate-container' shadow='never'>
       <el-row>
@@ -102,7 +101,6 @@
 </template>
 
 <script>
-import Breadcrumb from 'components/common/Breadcrumb'
 import {listByPage, update, deleteById} from 'api/roles'
 import Pagination from 'components/common/Pagination'
 import params from 'utils/query'
@@ -111,7 +109,6 @@ import RoleDetails from './components/RoleDetails'
 export default {
   name: "index",
   components: {
-    Breadcrumb,
     Pagination,
     RoleDetails
   },

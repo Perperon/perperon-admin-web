@@ -1,6 +1,5 @@
 <template>
 <div class='app-container'>
-  <breadcrumb></breadcrumb>
   <div class='table-container'>
   <el-card>
     <!--列表区-->
@@ -38,14 +37,12 @@
 </template>
 
 <script>
-import Breadcrumb from 'components/common/Breadcrumb'
 import {listByPage,update} from 'api/menu'
 import Pagination from 'components/common/Pagination'
 import params from 'utils/query'
 export default {
   name: "index",
   components:{
-    Breadcrumb,
     Pagination
   },
   data(){

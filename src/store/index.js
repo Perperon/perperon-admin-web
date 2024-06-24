@@ -27,6 +27,9 @@ const store = new Vuex.Store({
       }
       state.editableTabsValue = tab.path
     },
+    SET_TABS_VALUE:(state,value) =>{
+      state.editableTabsValue = value;
+    },
     RESET_TABS:(state) =>{
       state.editableTabsValue = '/index';
       state.editableTabs=[

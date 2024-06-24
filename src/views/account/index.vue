@@ -1,6 +1,5 @@
 <template>
   <div class='app-container'>
-    <breadcrumb></breadcrumb>
     <!--卡片视图-搜索区-->
     <el-card class='box-card'>
       <el-row :gutter='20'>
@@ -111,7 +110,6 @@
 </template>
 
 <script>
-import Breadcrumb from 'components/common/Breadcrumb'
 import { listByPage, update, deleteById } from 'api/login'
 import Pagination from 'components/common/Pagination'
 import params from 'utils/query'
@@ -134,7 +132,6 @@ export default {
   },
   components: {
     LoginDetails,
-    Breadcrumb,
     Pagination
   },
   methods: {
