@@ -15,8 +15,13 @@
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>首页</el-dropdown-item>
+          <el-dropdown-item>
+            <a @click="handlerClick('/home')">首页</a>
+          </el-dropdown-item>
           <el-dropdown-item>切换角色</el-dropdown-item>
+          <el-dropdown-item>
+            <a @click="handlerClick('/userCenter')">个人中心</a>
+          </el-dropdown-item>
           <el-dropdown-item command='logout' divided>退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -62,7 +67,7 @@
       </el-main>
       <el-footer>
           <div>
-            Copyright @2024-2030 个人学习项目版权 版权所有@Perperon &nbsp;&nbsp;<a href='http://www.github.com' target='_blank'>github官网</a>
+            Copyright @2024-2030 个人学习项目版权 版权所有@Perperon &nbsp;&nbsp;<a href='https://github.com/Perperon/perperon-admin-web' target='_blank'>github官网</a>
           </div>
       </el-footer>
     </el-container>
@@ -112,7 +117,11 @@ export default {
       }
     },
     openTab(item){
-      this.$store.commit("SET_TABS",item)
+      this.$store.commit("SET_TAB",item)
+    },
+    handlerClick(path){
+      this.$router.push({path: path})
+      //this.$store.commit('SET_TAB_VALUE',path)
     }
   }
 }
@@ -182,6 +191,7 @@ export default {
   background-color: #E9EEF3;
   padding: 20px;
   display: flex;
+  color: #99a9bf;
   align-items: center;
 }
 </style>

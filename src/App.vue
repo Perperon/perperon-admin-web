@@ -22,7 +22,7 @@ export default {
             path: this.$route.path
         }
         // 判断是否已经存在该tab,如果存在则不处理,否则加入到tab中
-        this.$store.commit('SET_TABS',obj)
+        this.$store.commit('SET_TAB',obj)
       }
     }
   }

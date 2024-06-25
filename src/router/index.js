@@ -25,6 +25,12 @@ export const routes =[
         path: '/index',
         name: 'index',
         component: () => import('views/home/index')
+      },
+      {
+        path: '/userCenter',
+        name: '个人中心',
+        meta: { title: '个人中心' },
+        component: () => import('views/account/userCenter/index')
       }
     ]
   },
@@ -48,7 +54,7 @@ export const routes =[
     name: 'account',
     redirect: '/account/list',
     component: layOut,
-    meta: { title: '用户管理',icon: 'user' },
+    meta: { title: '用户管理',icon: 'userCenter' },
     children:[
       {
         path: '/account/list',

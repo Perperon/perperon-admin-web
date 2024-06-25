@@ -7,7 +7,8 @@ const account = {
     name: '',
     avatar: '',
     roles: [],
-    menus: []
+    menus: [],
+    userInfo: null
   },
 
   mutations: {
@@ -26,6 +27,9 @@ const account = {
     SET_MENUS: (state, menus) => {
       state.menus = menus
     },
+    SET_USERINFO: (state, userInfo) => {
+      state.userInfo = userInfo
+    }
   },
 
   actions: {
@@ -58,6 +62,7 @@ const account = {
           commit('SET_NAME', data.nickName)
           commit('SET_AVATAR', data.icon)
           commit('SET_MENUS', data.menus)
+          commit('SET_USERINFO', data.userInfo)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -71,6 +76,7 @@ const account = {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('SET_USERINFO', null)
           commit('RESET_TABS')
           removeToken()
           resolve()

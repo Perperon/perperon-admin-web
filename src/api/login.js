@@ -38,6 +38,14 @@ export function update(data){
   })
 }
 
+export function updatePwd(data){
+  return request({
+    url:'/account/updatePwd',
+    method: 'put',
+    data: data
+  })
+}
+
 export function create(data){
   return request({
     url:'/account/create',

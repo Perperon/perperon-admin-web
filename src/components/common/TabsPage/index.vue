@@ -38,6 +38,8 @@ export default {
       }
       this.tabsValue = activeName;
       this.tableTabs = tabs.filter(tab => tab.name !== targetName);
+      this.$router.push({path:this.tabsValue})
+      this.$store.commit("SET_TABS",this.tableTabs)
     },
     handleClick(target) {
       this.$router.push({path:target._props.name})

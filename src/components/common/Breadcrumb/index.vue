@@ -5,7 +5,6 @@
       <el-breadcrumb-item v-for="(item,index)  in levelList" :key="item.path" v-if="item.meta.title">
         <span v-if="(item.redirect==='noredirect'|| index>0) && item.meta.parentName">{{item.meta.parentName}}&nbsp;&nbsp;/&nbsp;&nbsp;</span>
         <span v-if="item.redirect==='noredirect'||index==levelList.length-1">{{item.meta.title}}</span>
-<!--        <router-link v-else :to="item.redirect || item.path">{{item.meta.title}}</router-link>-->
         <a v-else @click="handlerClick(item.redirect,item.path)">{{item.meta.title}}</a>
       </el-breadcrumb-item>
     </transition-group>
@@ -38,7 +37,7 @@ export default {
     },
     handlerClick(redirect,path){
       this.$router.push({path: redirect==null?path:redirect})
-      this.$store.commit('SET_TABS_VALUE',redirect==null?path:redirect)
+      this.$store.commit('SET_TAB_VALUE',redirect==null?path:redirect)
     }
   }
 }

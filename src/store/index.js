@@ -18,7 +18,7 @@ const store = new Vuex.Store({
   },
   //state里面的属性需用mutations来改变
   mutations:{
-    SET_TABS:(state,tab) =>{
+    SET_TAB:(state,tab) =>{
       if (state.editableTabs.findIndex(e=>e.name===tab.path)===-1){
         state.editableTabs.push({
           title: tab.menuName,
@@ -27,7 +27,10 @@ const store = new Vuex.Store({
       }
       state.editableTabsValue = tab.path
     },
-    SET_TABS_VALUE:(state,value) =>{
+    SET_TABS:(state,tabs) =>{
+      state.editableTabs = tabs
+    },
+    SET_TAB_VALUE:(state,value) =>{
       state.editableTabsValue = value;
     },
     RESET_TABS:(state) =>{

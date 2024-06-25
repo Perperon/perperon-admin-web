@@ -5,6 +5,7 @@ const index = {
   avatar: state => state.account.avatar,
   name: state => state.account.name,
   roles: state => state.account.roles,
+  userInfo: state => state.account.userInfo,
   menus: state => state.account.menus,
   addRouters: state => state.permission.addRouters,
   getEditableTabs: state => state.editableTabs,
