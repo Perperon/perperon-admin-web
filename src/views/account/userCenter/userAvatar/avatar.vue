@@ -7,18 +7,18 @@
       list-type="picture"
       :multiple="false"
       :show-file-list="false"
-      :before-upload="beforeUpload"
+      :before-upload="beforeAvatarUpload"
       :on-success="handleUploadSuccess"
       >
       <img  v-if='imageUrl' :src='imageUrl' class='avatar'/>
-      <el-icon v-else class='avatar-uploader-icon'></el-icon>
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
     <el-button size="small" @click="onSubmit">确认更换</el-button>
   </el-form>
 </template>
 
 <script>
-
+import { update } from 'api/login'
 export default {
   name: 'avatar',
   props:{
@@ -32,13 +32,18 @@ export default {
     }
   },
   created() {
-    this.imgForm.id = this.id
-    this.imgForm.icon = this.path
-    this.imageUrl = process.env.BASE_API + this.imgForm.icon
+      this.imgForm.id = this.id
+      this.imgForm.icon = this.path
+    if (this.imgForm.icon){
+      this.imageUrl = process.env.BASE_API + this.imgForm.icon
+    }
   },
   data(){
     return{
-      header: this.$store.getters.token,
+      header: {
+        Authorization: this.$store.getters.token
+      },
+      host: process.env.BASE_API,
       imgForm:{
         id: null,
         icon: null
@@ -49,21 +54,57 @@ export default {
   },
   methods:{
     onSubmit(){
-
+      this.$refs.imgFormRef.validate((valid) => {
+        if (valid) {
+          update(this.imgForm).then((res) => {
+            if (res.code != 200) return this.$message.error(res.msg)
+            this.$message.success('更换头像成功')
+          })
+        }
+      })
     },
-    beforeUpload(){
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
 
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
     },
     handleUploadSuccess(res){
-      this.imageUrl = process.env.BASE_API + res.data.src
-      this.imgForm.icon =  res.data.title
+      this.imageUrl = this.host + res.data.src
+      this.imgForm.icon =  res.data.src
     }
   }
 }
 </script>
 
 <style scoped>
-  .avatar{
-    width: 100px;
-  }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

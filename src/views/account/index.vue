@@ -55,6 +55,11 @@
             </el-form>
           </template>
         </el-table-column>
+        <el-table-column label='头像' width='80' align='center'>
+          <template slot-scope='scope'>
+            <img :src='host+scope.row.icon' width='50' height='50'/>
+          </template>
+        </el-table-column>
         <el-table-column type='selection' width='55'>
         </el-table-column>
         <el-table-column prop='username' label='账号' align='center'>
@@ -124,7 +129,8 @@ export default {
       params: params,
       isEdit: false,
       isDialog: false,
-      id: null
+      id: null,
+      host: process.env.BASE_API
     }
   },
   created() {
