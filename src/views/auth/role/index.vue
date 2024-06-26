@@ -103,7 +103,7 @@
 <script>
 import {listByPage, update, deleteById} from 'api/roles'
 import Pagination from 'components/common/Pagination'
-import params from 'utils/query'
+import { params,resetParams } from 'utils/query'
 import RoleDetails from './components/RoleDetails'
 
 export default {
@@ -116,7 +116,7 @@ export default {
     return {
       multipleSelection: [],
       roleData: [],
-      params: params,
+      params: Object.assign({},params),
       isEdit: false,
       isDialog: false,
       id: null
@@ -135,6 +135,9 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    handleResetSearch() {
+      this.params = Object.assign({}, resetParams);
     },
     updateStatus(id, status) {
       update({id: id, status: status}).then(res => {

@@ -39,7 +39,7 @@
 <script>
 import {listByPage,update} from 'api/menu'
 import Pagination from 'components/common/Pagination'
-import params from 'utils/query'
+import { params,resetParams } from 'utils/query'
 export default {
   name: "index",
   components:{
@@ -49,7 +49,7 @@ export default {
     return{
       multipleSelection: [],
       menuData: [],
-      params: params
+      params: Object.assign({},params)
     }
   },
   created() {
@@ -62,6 +62,9 @@ export default {
         this.menuData=res.data.list
         this.params.total = res.data.total
       })
+    },
+    handleResetSearch() {
+      this.params = Object.assign({}, resetParams);
     },
     handleSelectionChange(val) {
       this.multipleSelection = val

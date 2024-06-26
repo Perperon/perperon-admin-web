@@ -46,6 +46,13 @@ export function updatePwd(data){
   })
 }
 
+export function resetPwd(id){
+  return request({
+    url:'/account/resetPwd/'+id,
+    method: 'put'
+  })
+}
+
 export function create(data){
   return request({
     url:'/account/create',
@@ -65,5 +72,13 @@ export function deleteById(id){
   return request({
     url:'/account/delete/'+id,
     method: 'delete'
+  })
+}
+
+export function deleteBatches(ids){
+  return request({
+    url:'/account/deleteBatches',
+    method: 'delete',
+    data: ids
   })
 }

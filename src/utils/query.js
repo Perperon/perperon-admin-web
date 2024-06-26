@@ -1,6 +1,11 @@
-const params = {
+export const params = {
   total: 0,
   pageNum: 1,
   pageSize: 10
 }
-export default params
+
+export const resetParams = {
+  total: 0,
+  pageNum: 1,
+  pageSize: 10
+}
