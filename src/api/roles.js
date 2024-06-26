@@ -37,3 +37,12 @@ export function deleteById(id){
     method: 'delete'
   })
 }
+
+export function grantRole(data){
+  return request({
+    url:'/role/grantRole',
+    method: 'post',
+    data: data,
+    headers:{'Content-type':'application/json'}
+  })
+}

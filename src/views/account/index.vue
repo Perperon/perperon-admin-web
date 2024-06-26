@@ -35,30 +35,6 @@
         </el-form>
       </div>
     </el-card>
-    <!--卡片视图-操作区-->
-<!--    <el-card class='operate-container' shadow='never'>-->
-<!--      <el-row>-->
-<!--        <el-col :span='4'>-->
-<!--          <i class='el-icon-tickets' style='float: left'></i>-->
-<!--          <span style='float: left;position: relative;left: 4px'>数据列表</span>-->
-<!--        </el-col>-->
-<!--        <el-col :span='20'>-->
-<!--          <el-popconfirm-->
-<!--            confirm-button-text='确认'-->
-<!--            cancel-button-text='返回'-->
-<!--            icon="el-icon-info"-->
-<!--            icon-color="red"-->
-<!--            title="确定删除这些数据吗？"-->
-<!--            @confirm="deleteAll"-->
-<!--          >-->
-<!--            <el-button slot="reference" class='btn-add' :disabled='btnFlag' size='mini'>删除</el-button>-->
-<!--          </el-popconfirm>-->
-<!--          <el-button class='btn-add' @click='addDialog' size='mini'>-->
-<!--            添加-->
-<!--          </el-button>-->
-<!--        </el-col>-->
-<!--      </el-row>-->
-<!--    </el-card>-->
     <!--用户列表区-->
     <div class='table-container'>
       <el-row :gutter='20'>
@@ -72,8 +48,7 @@
             icon="el-icon-info"
             icon-color="red"
             title="确定删除这些数据吗？"
-            @confirm="deleteAll"
-          >
+            @confirm="deleteAll">
             <el-button slot="reference" :disabled='btnFlag' class='btnClass'>删除</el-button>
           </el-popconfirm>
         </el-col>
@@ -143,8 +118,7 @@
               <el-button
                 size='mini'
                 type='primary' round
-                @click='editDialog(scope.$index,scope.row.id)'
-              >
+                @click='editDialog(scope.$index,scope.row.id)'>
                 <svg-icon icon-class='edit'></svg-icon>
               </el-button>
             </el-tooltip>
@@ -152,8 +126,7 @@
               <el-button
                 size='mini'
                 type='success' round
-                @click="resetPwd(scope.$index,scope.row.id)"
-              >
+                @click="resetPwd(scope.$index,scope.row.id)">
                 <svg-icon icon-class='resetPwd'></svg-icon>
               </el-button>
             </el-tooltip>
@@ -161,8 +134,7 @@
               <el-button
                 size='mini'
                 type='danger' round
-                @click="deleteHandler(scope.$index,scope.row.id)"
-              >
+                @click="deleteHandler(scope.$index,scope.row.id)">
                 <svg-icon icon-class='delete'></svg-icon>
               </el-button>
             </el-tooltip>
@@ -170,7 +142,7 @@
               <el-button
                 size='mini'
                 type='warning' round
-              >
+                @click='handleRoleDialog(scope.row.id,scope.row.roleList)'>
                 <svg-icon icon-class='roles'></svg-icon>
               </el-button>
             </el-tooltip>
@@ -180,6 +152,7 @@
     </div>
     <Pagination :query-info='params' @query='initList'></Pagination>
     <login-details :is-edit='isEdit' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></login-details>
+    <role-dialog v-model='roleDialogVisible' :roleList='roleList' :roleDialogVisible='roleDialogVisible' :id='id' @dislogDetails='handleRoleClose'></role-dialog>
   </div>
 </template>
 
@@ -188,6 +161,7 @@ import { listByPage, update, deleteById, deleteBatches, resetPwd } from 'api/log
 import Pagination from 'components/common/Pagination'
 import { params,resetParams } from 'utils/query'
 import LoginDetails from './components/LoginDetails'
+import RoleDialog from './components/RoleDialog'
 
 export default {
   name: 'account',
@@ -203,6 +177,8 @@ export default {
       id: null,
       host: process.env.BASE_API,
       btnFlag: true,
+      roleDialogVisible: false,
+      roleList: [],
       statusData: [
         {
           label: '启用',
@@ -220,7 +196,8 @@ export default {
   },
   components: {
     LoginDetails,
-    Pagination
+    Pagination,
+    RoleDialog
   },
   methods: {
     initList(queryInfo) {
@@ -263,7 +240,6 @@ export default {
       this.id = id;
     },
     handleDialog(flag){
-      console.log(flag);
       this.isDialog = flag;
       this.isEdit = flag;
       this.initList(this.params)
@@ -312,6 +288,15 @@ export default {
           });
         })
       })
+    },
+    handleRoleClose(flag){
+      this.roleDialogVisible = flag;
+      this.initList(this.params)
+    },
+    handleRoleDialog(id,roles){
+      this.id = id
+      this.roleList = roles
+      this.roleDialogVisible = true
     }
   }
 }
