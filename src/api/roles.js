@@ -38,6 +38,14 @@ export function deleteById(id){
   })
 }
 
+export function deleteBatches(ids){
+  return request({
+    url:'/role/deleteBatches',
+    method: 'delete',
+    data: ids
+  })
+}
+
 export function grantRole(data){
   return request({
     url:'/role/grantRole',

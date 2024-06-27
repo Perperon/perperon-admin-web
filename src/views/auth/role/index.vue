@@ -1,21 +1,64 @@
 <template>
   <div class='app-container'>
-    <!--卡片视图-操作区-->
-    <el-card class='operate-container' shadow='never'>
-      <el-row>
-        <el-col :span='4'>
-          <i class='el-icon-tickets' style='float: left'></i>
-          <span style='float: left;position: relative;left: 4px'>数据列表</span>
-        </el-col>
-        <el-col :span='20'>
-          <el-button class='btn-add' @click='addDialog' size='mini'>
-            添加
-          </el-button>
-        </el-col>
-      </el-row>
+    <!--卡片视图-搜索区-->
+    <el-card class="filter-container" shadow="never">
+      <div>
+        <div style="float:left">
+          <i class="el-icon-search"></i>
+          <span>筛选搜索</span>
+        </div>
+        <el-button
+          style="float:right"
+          type="primary"
+          @click="searchRoleList()"
+          size="small">
+          查询搜索
+        </el-button>
+        <el-button
+          style="float:right;margin-right: 15px"
+          @click="handleResetSearch()"
+          size="small">
+          重置
+        </el-button>
+      </div>
+      <div style="margin-top: 30px">
+        <el-form :inline="true" :model="params" size="small" label-width="80px">
+          <el-form-item label="状态：" class='select-form'>
+            <el-select v-model="params.status" class="input-width" placeholder="全部" clearable>
+              <el-option v-for="item in statusData"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
     </el-card>
     <!--列表区-->
     <div class='table-container'>
+      <el-row :gutter='20'>
+        <el-col :span='16'>
+          <el-button  @click='addDialog' class='btnClass'>
+            添加
+          </el-button>
+          <el-popconfirm
+            confirm-button-text='确认'
+            cancel-button-text='返回'
+            icon="el-icon-info"
+            icon-color="red"
+            title="确定删除这些数据吗？"
+            @confirm="deleteAll">
+            <el-button slot="reference" :disabled='btnFlag' class='btnClass'>删除</el-button>
+          </el-popconfirm>
+        </el-col>
+        <el-col class='search' :span='4'>
+          <el-input placeholder='请输入用户名搜索' @keyup.enter.native='searchRoleList' v-model="params.name" clearable @clear="searchRoleList">
+            <el-button @click="searchRoleList" slot='append' icon='el-icon-search'></el-button>
+          </el-input>
+        </el-col>
+      </el-row>
+
       <el-card>
         <el-table
           ref="multipleTable"
@@ -101,7 +144,7 @@
 </template>
 
 <script>
-import {listByPage, update, deleteById} from 'api/roles'
+import {listByPage, update, deleteById, deleteBatches} from 'api/roles'
 import Pagination from 'components/common/Pagination'
 import { params,resetParams } from 'utils/query'
 import RoleDetails from './components/RoleDetails'
@@ -119,7 +162,18 @@ export default {
       params: Object.assign({},params),
       isEdit: false,
       isDialog: false,
-      id: null
+      id: null,
+      btnFlag: true,
+      statusData: [
+        {
+          label: '启用',
+          value: 1
+        },
+        {
+          label: '禁用',
+          value: 0
+        }
+      ]
     }
   },
   created() {
@@ -133,8 +187,16 @@ export default {
         this.params.total = res.data.total
       })
     },
+    searchRoleList(){
+      this.initList(this.params);
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val
+      if (this.multipleSelection.length>0){
+        this.btnFlag = false
+      }else {
+        this.btnFlag = true
+      }
     },
     handleResetSearch() {
       this.params = Object.assign({}, resetParams);
@@ -174,7 +236,21 @@ export default {
           this.initList(this.params);
         });
       });
-    }
+    },
+    deleteAll(){
+      let ids = []
+      this.multipleSelection.forEach(r =>{
+        ids.push(r.id)
+      })
+      deleteBatches(ids).then(res =>{
+        this.$message({
+          message: res.message,
+          type: 'success',
+          duration: 1000
+        })
+        this.initList(this.params);
+      })
+    },
   }
 }
 </script>
@@ -192,5 +268,16 @@ export default {
 .auth_center{
   display: flex;
   align-items: center;
+}
+.search {
+  float: right;
+  margin-bottom: 10px;
+}
+.btnClass {
+  float: left;
+}
+.select-form{
+  float: left;
+  margin-left: 0;
 }
 </style>
