@@ -1,8 +1,15 @@
 import request from "utils/request"
 
-export function treeList(){
+export function treeMenuList(){
   return request({
-    url: '/menu/treeList',
+    url: '/menu/treeMenuList',
+    method: 'get'
+  })
+}
+
+export function menuRoleList(roleId){
+  return request({
+    url: '/menu/menuRoleList/'+roleId,
     method: 'get'
   })
 }
@@ -20,5 +27,14 @@ export function update(data){
     url: '/menu/update',
     method: 'put',
     data: data
+  })
+}
+
+export function grantMenu(data){
+  return request({
+    url: '/menu/grantMenu',
+    method: 'post',
+    data: data,
+    headers:{'Content-type':'application/json'}
   })
 }

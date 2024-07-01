@@ -129,7 +129,8 @@
               <el-tooltip class='item' effect='dark' content='分配权限' placement='top'>
                 <el-button
                   size='mini'
-                  type='warning' round>
+                  type='warning' round
+                  @click='handleMenuDialog(scope.row.id)'>
                   <svg-icon icon-class='authzation'></svg-icon>
                 </el-button>
               </el-tooltip>
@@ -140,6 +141,7 @@
     </div>
     <Pagination :query-info='params' @query='initList'></Pagination>
     <role-details :is-edit='isEdit' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></role-details>
+    <menu-dialog v-model='menuDialogVisible' :menuDialogVisible='menuDialogVisible' :id='id' @dislogDetails='handleMenuClose'></menu-dialog>
   </div>
 </template>
 
@@ -148,12 +150,14 @@ import {listByPage, update, deleteById, deleteBatches} from 'api/roles'
 import Pagination from 'components/common/Pagination'
 import { params,resetParams } from 'utils/query'
 import RoleDetails from './components/RoleDetails'
+import MenuDialog from './components/MenuDialog'
 
 export default {
   name: "index",
   components: {
     Pagination,
-    RoleDetails
+    RoleDetails,
+    MenuDialog
   },
   data() {
     return {
@@ -173,7 +177,8 @@ export default {
           label: '禁用',
           value: 0
         }
-      ]
+      ],
+      menuDialogVisible: false
     }
   },
   created() {
@@ -251,6 +256,14 @@ export default {
         this.initList(this.params);
       })
     },
+    handleMenuClose(flag){
+      this.menuDialogVisible = flag;
+      this.initList(this.params)
+    },
+    handleMenuDialog(id){
+      this.id = id
+      this.menuDialogVisible = true
+    }
   }
 }
 </script>
