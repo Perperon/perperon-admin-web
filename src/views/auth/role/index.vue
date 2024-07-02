@@ -140,7 +140,7 @@
       </el-card>
     </div>
     <Pagination :query-info='params' @query='initList'></Pagination>
-    <role-details :is-edit='isEdit' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></role-details>
+    <role-details :is-edit='isEdit' :dialog-title='dialogTitle' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></role-details>
     <menu-dialog v-model='menuDialogVisible' :menuDialogVisible='menuDialogVisible' :id='id' @dislogDetails='handleMenuClose'></menu-dialog>
   </div>
 </template>
@@ -166,6 +166,7 @@ export default {
       params: Object.assign({},params),
       isEdit: false,
       isDialog: false,
+      dialogTitle: null,
       id: null,
       btnFlag: true,
       statusData: [
@@ -215,11 +216,13 @@ export default {
     addDialog() {
       this.isDialog = true;
       this.isEdit = false;
+      this.dialogTitle = '添加角色'
     },
     editDialog(index, id) {
       this.isDialog = true;
       this.isEdit = true;
       this.id = id;
+      this.dialogTitle = '修改角色'
     },
     handleDialog(flag) {
       this.isDialog = flag;

@@ -53,20 +53,49 @@
           <el-tag type="warning" v-else-if="scope.row.level === 3">三级菜单</el-tag>
         </template>
       </el-table-column>
+      <el-table-column width="200px" label="操作">
+        <template slot-scope='scope'>
+          <el-tooltip class='item' effect='dark' content='编辑' placement='top'>
+            <el-button
+              size='mini'
+              type='primary' round
+              @click='editDialog(scope.$index,scope.row.id)'>
+              <svg-icon icon-class='edit'></svg-icon>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip class='item' effect='dark' content='删除' placement='top'>
+            <el-button
+              size='mini'
+              type='danger' round
+              @click="deleteHandler(scope.$index,scope.row.id)">
+              <svg-icon icon-class='delete'></svg-icon>
+            </el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
     </el-table>
   </el-card>
+    <menu-details :is-edit='isEdit' :dialog-title='dialogTitle' :table-data='menuData' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></menu-details>
   </div>
 </div>
 </template>
 
 <script>
-import {treeMenuList,update} from 'api/menu'
+import {treeMenuList,update,deleteById} from 'api/menu'
+import MenuDetails from './components/MenuDetails'
 export default {
   name: "index",
+  components:{
+    MenuDetails
+  },
   data(){
     return{
       multipleSelection: [],
-      menuData: []
+      menuData: [],
+      isEdit: false,
+      isDialog: false,
+      id: null,
+      dialogTitle: null
     }
   },
   created() {
@@ -85,8 +114,37 @@ export default {
         this.$message.success(res.message)
       })
     },
-    addDialog(){
-
+    addDialog() {
+      this.isDialog = true;
+      this.isEdit = false;
+      this.dialogTitle = '添加菜单'
+    },
+    editDialog(index, id) {
+      this.isDialog = true;
+      this.isEdit = true;
+      this.id = id;
+      this.dialogTitle = '修改菜单'
+    },
+    handleDialog(flag) {
+      this.isDialog = flag;
+      this.isEdit = flag;
+      this.initList(this.params)
+    },
+    deleteHandler(index, id) {
+      this.$confirm('确认要删除此菜单', '删除提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteById(id).then(response => {
+          this.$message({
+            message: '删除成功',
+            type: 'success',
+            duration: 1000
+          });
+          this.initList(this.params);
+        });
+      });
     }
   }
 }

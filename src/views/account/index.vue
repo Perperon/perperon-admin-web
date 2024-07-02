@@ -151,7 +151,7 @@
       </el-table>
     </div>
     <Pagination :query-info='params' @query='initList'></Pagination>
-    <login-details :is-edit='isEdit' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></login-details>
+    <login-details :is-edit='isEdit' :dialogTitle='dialogTitle' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></login-details>
     <role-dialog v-model='roleDialogVisible' :roleList='roleList' :roleDialogVisible='roleDialogVisible' :id='id' @dislogDetails='handleRoleClose'></role-dialog>
   </div>
 </template>
@@ -174,6 +174,7 @@ export default {
       }, params),
       isEdit: false,
       isDialog: false,
+      dialogTitle: null,
       id: null,
       host: process.env.BASE_API,
       btnFlag: true,
@@ -230,14 +231,16 @@ export default {
         this.btnFlag = true
       }
     },
-    addDialog(){
+    addDialog() {
       this.isDialog = true;
       this.isEdit = false;
+      this.dialogTitle = '添加用户'
     },
-    editDialog(index,id){
+    editDialog(index, id) {
       this.isDialog = true;
       this.isEdit = true;
       this.id = id;
+      this.dialogTitle = '修改用户'
     },
     handleDialog(flag){
       this.isDialog = flag;

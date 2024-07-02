@@ -59,9 +59,9 @@ export default {
     handleBeforeClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
+          this.dislogVisible = false
+          this.$emit('dislogDetails',this.dislogVisible)
           done()
-        })
-        .catch(_ => {
         })
     },
     handleClose(){

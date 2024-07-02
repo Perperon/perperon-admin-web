@@ -1,10 +1,10 @@
 <template>
   <!--添加信息框-->
   <el-dialog
-    title='添加用户'
+    :title='dialogTitle'
     :visible.sync='dialogVisible'
     width='40%'
-    :before-close='handleClose'
+    :before-close='handleBeforeClose'
     @close='addDialogClosed'>
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
@@ -43,6 +43,24 @@ const defaultFrom = {
 }
 export default {
   name: 'LoginDetails',
+  props: {
+    isEdit: {
+      type: Boolean,
+      default: false
+    },
+    isDialog:{
+      type: Boolean,
+      default: false
+    },
+    dialogTitle:{
+      type: String,
+      default: '添加',
+    },
+    id:{
+      type: String,
+      default: null,
+    }
+  },
   data () {
     return {
       dialogVisible: false,
@@ -73,27 +91,13 @@ export default {
       }
     }
   },
-  props: {
-    isEdit: {
-      type: Boolean,
-      default: false
-    },
-    isDialog:{
-      type: Boolean,
-      default: false
-    },
-    id:{
-      type: String,
-      default: null,
-    }
-  },
   methods: {
-    handleClose(done) {
+    handleBeforeClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
+          this.dislogVisible = false
+          this.$emit('dislogDetails',this.dislogVisible)
           done()
-        })
-        .catch(_ => {
         })
     },
     addDialogClosed(){

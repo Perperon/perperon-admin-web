@@ -30,6 +30,28 @@ export function update(data){
   })
 }
 
+export function create(data){
+  return request({
+    url:'/menu/create',
+    method: 'post',
+    data: data
+  })
+}
+
+export function getById(id){
+  return request({
+    url:'/menu/getById/'+id,
+    method: 'get'
+  })
+}
+
+export function deleteById(id){
+  return request({
+    url:'/menu/delete/'+id,
+    method: 'delete'
+  })
+}
+
 export function grantMenu(data){
   return request({
     url: '/menu/grantMenu',

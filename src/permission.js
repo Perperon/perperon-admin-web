@@ -32,14 +32,6 @@ router.beforeEach((to, from, next) => {
         next()
       }
     }
-
-     //其他请求需获取token
-     //  if(!token){
-     //     next({path: '/'})
-     //  } else{
-     //    next()
-     //    NProgress.done()
-     //  }
     } else {
     if (whiteList.indexOf(to.path) !== -1) {
       next()
