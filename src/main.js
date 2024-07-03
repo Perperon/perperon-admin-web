@@ -9,6 +9,7 @@ import 'assets/css/normalize.css' // A modern alternative to CSS resets
 import './assets/styles/index.scss' //global css
 import './icons'
 import './permission'
+import './utils/has'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI,{locale});

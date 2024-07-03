@@ -1,4 +1,6 @@
+import {fetchPermissions} from 'api/roles'
 import router from 'router/index';
+import store from '../index'
 //判断是否有权限访问该菜单
 function hasPermission(menu, parentName) {
   if(!menu.component) return null
@@ -13,17 +15,21 @@ function hasPermission(menu, parentName) {
 
 const permission = {
   state: {
-    addRouters: []
+    addRouters: [],
+    permissions: []
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
+    },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
     }
   },
   actions: {
     GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
-        const { menus } = data;
+        const { menus,permissions } = data;
         const newRouters = router.options.routes
         menus.forEach(menu => {
              if (menu.children && menu.children.length > 0) {
@@ -36,6 +42,7 @@ const permission = {
              }
         })
         commit('SET_ROUTERS', newRouters);
+        commit('SET_PERMISSIONS', permissions);
         resolve();
       })
     }

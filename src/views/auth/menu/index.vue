@@ -3,7 +3,7 @@
   <div class='table-container'>
     <el-row :gutter='20'>
       <el-col :span='16'>
-        <el-button  @click='addDialog' class='btnClass'>
+        <el-button v-has="'menu:add'"  @click='addDialog' class='btnClass'>
           添加
         </el-button>
       </el-col>

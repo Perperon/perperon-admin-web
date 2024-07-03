@@ -117,9 +117,7 @@ export default {
           { required: true, message: '请输入菜单名', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
         menuType: [
-          { required: true, message: '请选择菜单类型'}],
-        path: [
-          { required: true, message: '请输入路由路径', trigger: 'blur' }]
+          { required: true, message: '请选择菜单类型'}]
       }
     }
   },
