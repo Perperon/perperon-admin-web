@@ -39,7 +39,7 @@
     <div class='table-container'>
       <el-row :gutter='20'>
         <el-col :span='16'>
-          <el-button  @click='addDialog' class='btnClass'>
+          <el-button  @click='addDialog' class='btnClass' v-has="'account:add'">
             添加
           </el-button>
           <el-popconfirm
@@ -49,7 +49,7 @@
             icon-color="red"
             title="确定删除这些数据吗？"
             @confirm="deleteAll">
-            <el-button slot="reference" :disabled='btnFlag' class='btnClass'>删除</el-button>
+            <el-button slot="reference" :disabled='btnFlag' class='btnClass' v-has="'account:delete'">删除</el-button>
           </el-popconfirm>
         </el-col>
         <el-col class='search' :span='4'>
@@ -114,7 +114,7 @@
         </el-table-column>
         <el-table-column label='操作' width='250'>
           <template slot-scope='scope'>
-            <el-tooltip class='item' effect='dark' content='编辑' placement='top'>
+            <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'account:update'">
               <el-button
                 size='mini'
                 type='primary' round
@@ -122,7 +122,7 @@
                 <svg-icon icon-class='edit'></svg-icon>
               </el-button>
             </el-tooltip>
-            <el-tooltip class='item' effect='dark' content='重置密码' placement='top'>
+            <el-tooltip class='item' effect='dark' content='重置密码' placement='top' v-has="'account:update'">
               <el-button
                 size='mini'
                 type='success' round
@@ -130,7 +130,7 @@
                 <svg-icon icon-class='resetPwd'></svg-icon>
               </el-button>
             </el-tooltip>
-            <el-tooltip class='item' effect='dark' content='删除' placement='top'>
+            <el-tooltip class='item' effect='dark' content='删除' placement='top' v-has="'account:delete'">
               <el-button
                 size='mini'
                 type='danger' round
@@ -138,7 +138,7 @@
                 <svg-icon icon-class='delete'></svg-icon>
               </el-button>
             </el-tooltip>
-            <el-tooltip class='item' effect='dark' content='分配角色' placement='top'>
+            <el-tooltip class='item' effect='dark' content='分配角色' placement='top' v-has="'account:update'">
               <el-button
                 size='mini'
                 type='warning' round

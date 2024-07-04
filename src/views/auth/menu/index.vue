@@ -55,7 +55,7 @@
       </el-table-column>
       <el-table-column width="200px" label="操作">
         <template slot-scope='scope'>
-          <el-tooltip class='item' effect='dark' content='编辑' placement='top'>
+          <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'menu:update'">
             <el-button
               size='mini'
               type='primary' round
@@ -63,7 +63,7 @@
               <svg-icon icon-class='edit'></svg-icon>
             </el-button>
           </el-tooltip>
-          <el-tooltip class='item' effect='dark' content='删除' placement='top'>
+          <el-tooltip class='item' effect='dark' content='删除' placement='top' v-has="'menu:delete'">
             <el-button
               size='mini'
               type='danger' round

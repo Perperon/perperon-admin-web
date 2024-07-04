@@ -39,7 +39,7 @@
     <div class='table-container'>
       <el-row :gutter='20'>
         <el-col :span='16'>
-          <el-button  @click='addDialog' class='btnClass'>
+          <el-button  @click='addDialog' class='btnClass' v-has="'role:add'">
             添加
           </el-button>
           <el-popconfirm
@@ -49,7 +49,7 @@
             icon-color="red"
             title="确定删除这些数据吗？"
             @confirm="deleteAll">
-            <el-button slot="reference" :disabled='btnFlag' class='btnClass'>删除</el-button>
+            <el-button slot="reference" :disabled='btnFlag' class='btnClass' v-has="'role:delete'">删除</el-button>
           </el-popconfirm>
         </el-col>
         <el-col class='search' :span='4'>
@@ -110,7 +110,7 @@
           </el-table-column>
           <el-table-column width="200px" label="操作">
             <template slot-scope='scope'>
-              <el-tooltip class='item' effect='dark' content='编辑' placement='top'>
+              <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'role:update'">
                 <el-button
                   size='mini'
                   type='primary' round
@@ -118,7 +118,7 @@
                   <svg-icon icon-class='edit'></svg-icon>
                 </el-button>
               </el-tooltip>
-              <el-tooltip class='item' effect='dark' content='删除' placement='top'>
+              <el-tooltip class='item' effect='dark' content='删除' placement='top' v-has="'role:delete'">
                 <el-button
                   size='mini'
                   type='danger' round
@@ -126,7 +126,7 @@
                   <svg-icon icon-class='delete'></svg-icon>
                 </el-button>
               </el-tooltip>
-              <el-tooltip class='item' effect='dark' content='分配权限' placement='top'>
+              <el-tooltip class='item' effect='dark' content='分配权限' placement='top' v-has="'role:update'">
                 <el-button
                   size='mini'
                   type='warning' round

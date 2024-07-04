@@ -15,9 +15,7 @@ const has = Vue.directive('has',{
 
 Vue.prototype.$_has=function(value){
   let isExist = false
-  console.log(store.getters.permissions)
   const permissions = store.getters.permissions
-  console.log(permissions)
   if (permissions == undefined || permissions==null){
     return false;
   }

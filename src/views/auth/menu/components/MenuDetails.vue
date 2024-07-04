@@ -48,7 +48,7 @@
         <el-input v-model='addForm.path'></el-input>
       </el-form-item>
       <el-form-item label='显示菜单等级:' prop='level'>
-        <el-input-number v-model='addForm.level' :min='1'></el-input-number>
+        <el-input-number v-model='addForm.level' :min='1' :max='3'></el-input-number>
       </el-form-item>
       <el-form-item label='显示排序:' prop='sort'>
         <el-input-number v-model='addForm.sort' :min='1'></el-input-number>
