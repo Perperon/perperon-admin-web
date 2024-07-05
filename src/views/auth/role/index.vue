@@ -84,7 +84,7 @@
                       <i class="el-icon-caret-right"></i>
                     </el-col>
                     <el-col :span='18'>
-                     <el-tag v-for='(itera,indexTwo) in child.children' :key='itera.id' type='warning'>
+                     <el-tag v-for='(itera,indexTwo) in child.children' :key='itera.id' type='warning' closable @close="handleTagClose(itera.id)">
                        {{itera.menuName}}
                      </el-tag>
                     </el-col>
@@ -147,6 +147,7 @@
 
 <script>
 import {listByPage, update, deleteById, deleteBatches} from 'api/roles'
+import { deleteByRole } from 'api/roleMenu'
 import Pagination from 'components/common/Pagination'
 import { params,resetParams } from 'utils/query'
 import RoleDetails from './components/RoleDetails'
@@ -212,6 +213,20 @@ export default {
         if (res.code !== 200) return this.$message.error(res.message)
         this.$message.success(res.message)
       })
+    },
+    handleTagClose(id) {
+      this.$confirm('确认删除此权限吗？', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteByRole(id).then(res =>{
+          if (res.code!==200) return this.$message.error("删除权限失败")
+          this.$message.success(res.message)
+          this.initList(this.params);
+        })
+      })
+
     },
     addDialog() {
       this.isDialog = true;
