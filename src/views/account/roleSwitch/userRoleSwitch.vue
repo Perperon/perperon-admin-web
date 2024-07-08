@@ -67,7 +67,6 @@ export default {
       this.$emit('dislogDetails',this.details)
     },
     changeRadio(roleName){
-      console.log(roleName)
       this.roleForm.roleName = roleName
     },
     handlerConfirm(){

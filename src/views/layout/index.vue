@@ -136,6 +136,9 @@ export default {
       this.roleDialogVisible = details.dislogFlag;
       this.roleId = details.roleId
       this.roleName = this.$store.getters.roleName
+      this.$store.commit("SET_TAB_VALUE",'/index')
+      this.$store.commit('RESET_TABS')
+      this.$router.push({path: '/index'})
       this.getMenus()
     },
     roleDialog() {
