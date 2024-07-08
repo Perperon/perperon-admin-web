@@ -73,18 +73,18 @@
               <el-row :class="['auth_bottom',index===0 ? 'auth_top' : '','auth_center']" v-for="(item,index) in scope.row.children" :key='item.id'>
                 <!--一级权限-->
                 <el-col :span='5'>
-                  <el-tag>{{item.menuName}}</el-tag>
+                  <el-tag closable @close="handleTagClose(item.id,index,scope.row.children)">{{item.menuName}}</el-tag>
                   <i class="el-icon-caret-right"></i>
                 </el-col>
                 <!--二、三级权限-->
                 <el-col :span='19'>
                   <el-row :class="[indexOne!==0 ? 'auth_top':'','auth_center']" v-for='(child,indexOne) in item.children' :key="child.id">
                     <el-col :span='6'>
-                      <el-tag type='success'>{{child.menuName}}</el-tag>
+                      <el-tag type='success' closable @close="handleTagClose(child.id,index,item.children)">{{child.menuName}}</el-tag>
                       <i class="el-icon-caret-right"></i>
                     </el-col>
                     <el-col :span='18'>
-                     <el-tag v-for='(itera,indexTwo) in child.children' :key='itera.id' type='warning' closable @close="handleTagClose(itera.id)">
+                     <el-tag v-for='(itera,indexTwo) in child.children' :key='itera.id' type='warning' closable @close="handleTagClose(itera.id,index,child.children)">
                        {{itera.menuName}}
                      </el-tag>
                     </el-col>
@@ -214,7 +214,7 @@ export default {
         this.$message.success(res.message)
       })
     },
-    handleTagClose(id) {
+    handleTagClose(id,index,tags) {
       this.$confirm('确认删除此权限吗？', '提示', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
@@ -223,10 +223,13 @@ export default {
         deleteByRole(id).then(res =>{
           if (res.code!==200) return this.$message.error("删除权限失败")
           this.$message.success(res.message)
-          this.initList(this.params);
+          let index = tags.findIndex(item => item.id === id);
+          // 如果找到了对象，则删除它
+          if (index !== -1) {
+            tags.splice(index, 1);
+          }
         })
       })
-
     },
     addDialog() {
       this.isDialog = true;

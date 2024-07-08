@@ -14,6 +14,13 @@ export function menuRoleList(roleId){
   })
 }
 
+export function roleMenuList(roleId){
+  return request({
+    url: '/menu/roleMenuList/'+roleId,
+    method: 'get'
+  })
+}
+
 export function listByPage(params){
   return request({
     url: '/menu/listByPage',
