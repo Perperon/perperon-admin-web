@@ -11,14 +11,16 @@
         <span class="el-dropdown-link">
           <!--头像-->
           <el-avatar fit='scale-down' :size="50" :src="avatar"></el-avatar>
-          &nbsp;&nbsp;{{$store.getters.name}}
+          &nbsp;&nbsp;{{$store.getters.name}}({{roleName}})
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
             <a @click="handlerClick('/home')">首页</a>
           </el-dropdown-item>
-          <el-dropdown-item>切换角色</el-dropdown-item>
+          <el-dropdown-item>
+            <a @click='roleDialog()'>切换角色</a>
+          </el-dropdown-item>
           <el-dropdown-item>
             <a @click="handlerClick('/userCenter')">个人中心</a>
           </el-dropdown-item>
@@ -63,6 +65,7 @@
       <el-main>
         <breadcrumb></breadcrumb>
         <tabs-page></tabs-page>
+        <user-role-switch v-model='roleDialogVisible' :roleId='roleId'  :roleList='roleList' :roleDialogVisible='roleDialogVisible' :id='id' @dislogDetails='handleRoleClose'></user-role-switch>
         <router-view/>
       </el-main>
       <el-footer>
@@ -79,18 +82,25 @@
 <script>
 import TabsPage from 'components/common/TabsPage'
 import Breadcrumb from 'components/common/Breadcrumb'
+import userRoleSwitch from 'views/account/roleSwitch/userRoleSwitch'
 export default {
   name: 'layout',
   components:{
     TabsPage,
-    Breadcrumb
+    Breadcrumb,
+    userRoleSwitch
   },
   data() {
     return {
       menuList: [],
       collapse: false,
       active: 'collapse-item',
-      avatar: process.env.BASE_API + this.$store.getters.avatar
+      avatar: process.env.BASE_API + this.$store.getters.avatar,
+      roleName: this.$store.getters.roleName,
+      roleDialogVisible: false,
+      roleList: [],
+      id: null,
+      roleId: null
     }
   },
   created() {
@@ -121,7 +131,20 @@ export default {
     },
     handlerClick(path){
       this.$router.push({path: path})
-      //this.$store.commit('SET_TAB_VALUE',path)
+    },
+    handleRoleClose(details){
+      this.roleDialogVisible = details.dislogFlag;
+      this.roleId = details.roleId
+      this.roleName = this.$store.getters.roleName
+      this.getMenus()
+    },
+    roleDialog() {
+      if (!this.roleId){
+        this.roleId=this.$store.getters.roleList[0].id
+      }
+      this.roleList=this.$store.getters.roleList
+      this.id = this.$store.getters.userInfo.id
+      this.roleDialogVisible = true
     }
   }
 }

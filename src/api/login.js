@@ -22,6 +22,13 @@ export function getInfo(){
   })
 }
 
+export function getMenu(roleId){
+  return request({
+    url:'/account/getMenu/'+roleId,
+    method: 'get'
+  })
+}
+
 export function listByPage(params){
   return request({
     url:'/account/listByPage',

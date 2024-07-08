@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from 'api/login'
+import { login, logout, getInfo, getMenu } from 'api/login'
 import { getToken, setToken, removeToken } from 'utils/auth'
 
 const account = {
@@ -6,7 +6,9 @@ const account = {
     token: getToken(),
     name: '',
     avatar: '',
+    roleName:'',
     roles: [],
+    roleList: [],
     menus: [],
     userInfo: null
   },
@@ -21,8 +23,14 @@ const account = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
+    SET_ROLE_NAME: (state, roleName) => {
+      state.roleName = roleName
+    },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_ROLE_LIST: (state, roleList) => {
+      state.roleList = roleList
     },
     SET_MENUS: (state, menus) => {
       state.menus = menus
@@ -53,17 +61,21 @@ const account = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
+          commit('SET_NAME', data.nickName)
+          commit('SET_AVATAR', data.icon)
+          commit('SET_USERINFO', data.userInfo)
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLE_NAME', data.roleList[0].name)
             commit('SET_ROLES', data.roles)
+            commit('SET_ROLE_LIST', data.roleList)
+            getMenu(data.roleList[0].id).then(res => {
+              const data = res.data
+              commit('SET_MENUS', data.menus)
+              resolve(res)
+            })
           } else {
             reject('getInfo: auth must be a non-null array !')
           }
-          console.log(data)
-          commit('SET_NAME', data.nickName)
-          commit('SET_AVATAR', data.icon)
-          commit('SET_MENUS', data.menus)
-          commit('SET_USERINFO', data.userInfo)
-          resolve(response)
         }).catch(error => {
           reject(error)
         })
@@ -76,6 +88,7 @@ const account = {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('SET_ROLE_LIST', [])
           commit('SET_USERINFO', null)
           commit('RESET_TABS')
           removeToken()
