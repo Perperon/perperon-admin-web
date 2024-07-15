@@ -8,6 +8,7 @@
     @close='addDialogClosed'>
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
+      <input type='hidden' v-model='addForm.userId'/>
       <el-form-item label='用户名:' prop='username'>
         <el-input v-model='addForm.username' :disabled="isEdit"></el-input>
       </el-form-item>
@@ -34,12 +35,14 @@
 
 <script>
 import { update, create, getById } from 'api/login'
-
+import {ref} from 'vue'
+import store from 'store'
 const defaultFrom = {
   username: '',
   nickName: '',
   status: true,
-  email: ''
+  email: '',
+  userId: ref(store.getters.userInfo.id)
 }
 export default {
   name: 'LoginDetails',

@@ -1,5 +1,8 @@
 import Cookies from "js-cookie";
+
 const SupportKey='supportKey';
+const RoleId='roleId';
+
 export function getSupport() {
   return Cookies.get(SupportKey)
 }
@@ -14,4 +17,12 @@ export function setCookie(key,value,expires) {
 
 export function getCookie(key) {
   return Cookies.get(key)
+}
+
+export function getRoleId() {
+  return Cookies.get(RoleId)
+}
+
+export function setRoleId(isSupport) {
+  return Cookies.set(RoleId, isSupport,{ expires: 1 })
 }

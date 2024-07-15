@@ -40,3 +40,20 @@ export function str2Date(dateStr, separator) {
   let date = new Date(year, month - 1, day);
   return date;
 }
+
+export function formattedTime() {
+  const now = new Date();
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  };
+  const formatter = new Intl.DateTimeFormat('default', options);
+
+  const formattedTime = formatter.format(now).replace(/\//g, '-'); // 将斜杠替换为连字符
+  console.log(formattedTime); // 输出格式化的当前时间
+  return formattedTime;
+}

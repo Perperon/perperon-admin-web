@@ -8,6 +8,9 @@
     @close='addDialogClosed'>
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
+      <input type='hidden' v-model='addForm.userId'/>
+      <input type='hidden' v-model='addForm.updateBy'/>
+      <input type='hidden' v-model='addForm.updateTime'/>
       <el-form-item label='角色名:' prop='name'>
         <el-input v-model='addForm.name' :disabled="isEdit"></el-input>
       </el-form-item>
@@ -31,11 +34,16 @@
 
 <script>
 import { update, create, getById } from 'api/roles'
-
+import {ref} from 'vue'
+import store from 'store'
+import { formattedTime } from 'utils/date'
 const defaultFrom = {
   name: '',
   code: '',
-  status: true
+  status: true,
+  userId: ref(store.getters.userInfo.id),
+  updatedBy: '',
+  updatedTime: null
 }
 export default {
   name: 'RoleDetails',
@@ -77,6 +85,8 @@ export default {
       if (this.isEdit){
         getById(this.id).then(response => {
           this.addForm = response.data
+          this.addForm.updatedBy = ref(store.getters.userInfo.id)
+          this.addForm.updatedTime = formattedTime()
         })
       }else{
         this.addForm = Object.assign({},defaultFrom)

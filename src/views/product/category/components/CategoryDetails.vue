@@ -8,14 +8,12 @@
     @close='addDialogClosed'>
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
-      <el-form-item label='用户名:' prop='username'>
-        <el-input v-model='addForm.username' :disabled="isEdit"></el-input>
+      <input type='hidden' v-model='addForm.userId'/>
+      <el-form-item label='分类名称:' prop='name'>
+        <el-input v-model='addForm.name' :disabled="isEdit"></el-input>
       </el-form-item>
-      <el-form-item label='昵称:' prop='nickName'>
-        <el-input v-model='addForm.nickName' ></el-input>
-      </el-form-item>
-      <el-form-item label='邮箱:' prop='email'>
-        <el-input v-model='addForm.email' ></el-input>
+      <el-form-item label='分类图标:' prop='icon'>
+        <el-input v-model='addForm.icon' ></el-input>
       </el-form-item>
       <el-form-item label='是否启用:' prop='status'>
         <el-radio-group v-model="addForm.status">
@@ -33,13 +31,16 @@
 </template>
 
 <script>
-import { update, create, getById } from 'api/login'
-
+import { update, create, getById } from 'api/category'
+import {ref} from 'vue'
+import store from 'store'
+import { formattedTime } from 'utils/date'
 const defaultFrom = {
   username: '',
   nickName: '',
   status: true,
-  email: ''
+  email: '',
+  userId: ref(store.getters.userInfo.id)
 }
 export default {
   name: 'CategoryDetails',
@@ -85,6 +86,8 @@ export default {
       if (this.isEdit){
         getById(this.id).then(response => {
           this.addForm = response.data
+          this.addForm.updatedBy = ref(store.getters.userInfo.id)
+          this.addForm.updatedTime = formattedTime()
         })
       }else{
         this.addForm = Object.assign({},defaultFrom)

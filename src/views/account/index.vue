@@ -193,7 +193,7 @@ export default {
     }
   },
   created() {
-    this.initList()
+    this.initList(this.params)
   },
   components: {
     LoginDetails,
@@ -204,7 +204,6 @@ export default {
     initList(queryInfo) {
       listByPage(queryInfo).then(res => {
         if (res.code !== 200) return this.$message.error(res.message)
-        console.log(res.data.list)
         this.accountData = res.data.list
         this.params.total = res.data.total
       }).catch(err => {
@@ -319,9 +318,6 @@ export default {
 .search {
   float: right;
   margin-bottom: 10px;
-}
-.btnClass {
-  float: left;
 }
 .select-form{
   float: left;

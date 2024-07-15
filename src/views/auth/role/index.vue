@@ -307,9 +307,6 @@ export default {
   float: right;
   margin-bottom: 10px;
 }
-.btnClass {
-  float: left;
-}
 .select-form{
   float: left;
   margin-left: 0;

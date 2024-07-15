@@ -151,8 +151,5 @@ export default {
 </script>
 
 <style scoped>
-.btnClass{
-  float: left;
-  margin-bottom: 5px;
-}
+
 </style>

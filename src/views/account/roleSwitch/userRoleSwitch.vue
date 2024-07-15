@@ -24,6 +24,7 @@
 
 <script>
 import { getMenu } from 'api/login'
+import {setRoleId} from 'utils/support'
 export default {
   name: 'userRoleSwitch',
   props:{
@@ -78,6 +79,7 @@ export default {
           let permissions = res.data.permissions;
           this.$store.commit('SET_MENUS', menus)
           this.$store.commit('SET_ROLE_NAME', this.roleForm.roleName)
+          setRoleId(this.roleForm.radioRole)
           this.$store.dispatch('GenerateRoutes', { menus, permissions }).then(() => { // 生成可访问的路由表
             this.$router.addRoutes(this.$store.getters.addRouters); // 动态添加可访问路由表
           })

@@ -1,5 +1,6 @@
 import { login, logout, getInfo, getMenu } from 'api/login'
 import { getToken, setToken, removeToken } from 'utils/auth'
+import { getRoleId } from 'utils/support'
 
 const account = {
   state: {
@@ -68,7 +69,7 @@ const account = {
             commit('SET_ROLE_NAME', data.roleList[0].name)
             commit('SET_ROLES', data.roles)
             commit('SET_ROLE_LIST', data.roleList)
-            getMenu(data.roleList[0].id).then(res => {
+            getMenu(getRoleId()===''?data.roleList[0].id:getRoleId()).then(res => {
               const data = res.data
               commit('SET_MENUS', data.menus)
               resolve(res)

@@ -70,7 +70,8 @@
 
 <script>
 import { update, create, getById } from 'api/menu'
-
+import {ref} from 'vue'
+import store from 'store'
 const defaultFrom = {
   parentId: '',
   menuType: '',
@@ -81,7 +82,8 @@ const defaultFrom = {
   path: '',
   level: '',
   sort: '',
-  status: true
+  status: true,
+  userId: ref(store.getters.userInfo.id)
 }
 export default {
   name: 'MenuDetails',
