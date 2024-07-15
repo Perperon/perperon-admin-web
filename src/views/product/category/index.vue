@@ -11,7 +11,7 @@
 
       <el-card>
         <!--列表区-->
-        <el-table
+<!--        <el-table
           ref="multipleTable"
           :data='categoryData'
           border
@@ -86,7 +86,17 @@
               </el-tooltip>
             </template>
           </el-table-column>
-        </el-table>
+        </el-table>-->
+        <tree-table
+          :data='categoryData'
+          :columns='columns'
+          :selection-type='false'
+          :expand-type='false'
+          show-index index-text='#' border>
+          <template slot="icons" scope="scope">
+            {{ scope.row.likes.join(',') }}
+          </template>
+        </tree-table>
       </el-card>
       <Pagination :query-info='params' @query='initList'></Pagination>
       <category-details :is-edit='isEdit' :dialog-title='dialogTitle' :table-data='categoryData' :is-dialog='isDialog' :id='id'
@@ -116,7 +126,26 @@ export default {
       }, params),
       isEdit: false,
       isDialog: false,
-      dialogTitle: null
+      dialogTitle: null,
+      columns:[
+        {
+          label: '分类名称',
+          align: 'center',
+          prop: 'name'
+        },
+        {
+          label: '分类图标',
+          align: 'center',
+          prop: 'icon',
+          type: 'template',
+          template: 'icons',
+        },
+        {
+          label: '状态',
+          align: 'center',
+          prop: 'status'
+        }
+      ]
     }
   },
   created() {
