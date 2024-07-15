@@ -93,9 +93,9 @@
           :selection-type='false'
           :expand-type='false'
           show-index index-text='#' border>
-          <template slot="icons" scope="scope">
+<!--          <template slot="icons" scope="scope">
             {{ scope.row.likes.join(',') }}
-          </template>
+          </template>-->
         </tree-table>
       </el-card>
       <Pagination :query-info='params' @query='initList'></Pagination>

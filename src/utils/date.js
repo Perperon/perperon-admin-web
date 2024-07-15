@@ -57,3 +57,7 @@ export function formattedTime() {
   console.log(formattedTime); // 输出格式化的当前时间
   return formattedTime;
 }
+
+export function isEntry(value){
+  return value === undefined || value === ''
+}
