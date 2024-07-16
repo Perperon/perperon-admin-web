@@ -9,8 +9,18 @@
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
       <input type='hidden' v-model='addForm.userId'/>
+      <el-form-item label='父级名称:'>
+        <el-cascader
+          v-model="cascaderKeys"
+          :options="options"
+          expand-trigger='hover'
+          :props="cascaderProps"
+          clearable
+          change-on-select
+          @change="handleChange"></el-cascader>
+      </el-form-item>
       <el-form-item label='分类名称:' prop='name'>
-        <el-input v-model='addForm.name' :disabled="isEdit"></el-input>
+        <el-input v-model='addForm.name'></el-input>
       </el-form-item>
       <el-form-item label='分类图标:' prop='icon'>
         <el-input v-model='addForm.icon' ></el-input>
@@ -31,15 +41,16 @@
 </template>
 
 <script>
-import { update, create, getById } from 'api/category'
+import { update, create, getById,listByParentPage } from 'api/category'
 import {ref} from 'vue'
 import store from 'store'
 import { formattedTime } from 'utils/date'
 const defaultFrom = {
-  username: '',
-  nickName: '',
+  pid: null,
+  name: '',
+  icon:'',
   status: true,
-  email: '',
+  level: 1,
   userId: ref(store.getters.userInfo.id)
 }
 export default {
@@ -66,17 +77,17 @@ export default {
     return {
       dialogVisible: false,
       addForm: Object.assign({},defaultFrom),
+      options:[],
+      cascaderProps:{
+        value: 'id',
+        label: 'name',
+        children: 'children'
+      },
+      cascaderKeys:[],
       addFormRules: {
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }],
-        nickName: [
-          { required: true, message: '请输入你的昵称', trigger: 'blur' },
-          { min: 1, max: 30, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]
-
+        name: [
+          { required: true, message: '分类名称', trigger: 'blur' },
+          { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }]
       }
     }
   },
@@ -92,6 +103,13 @@ export default {
       }else{
         this.addForm = Object.assign({},defaultFrom)
       }
+      if (val){
+        listByParentPage().then(res =>{
+          if (res.code !== 200) return this.$message.error(res.message)
+          this.options = res.data.list
+          console.log(this.options)
+        })
+      }
     }
   },
   methods: {
@@ -106,10 +124,14 @@ export default {
     addDialogClosed(){
       //关闭时重置表单
       this.$refs.addFormRef.resetFields()
+      this.cascaderKeys = []
+      this.addForm.pid = null
+      this.addForm.level = 1
     },
     onSubmit(){
       this.$refs.addFormRef.validate((valid) => {
         if (!valid)  return
+        console.log(this.addForm)
         if (this.isEdit) {
           update(this.addForm).then(res => {
             if (res.code !== 200) return this.$message.error(res.message)
@@ -130,11 +152,24 @@ export default {
     dialogVisibleBut(){
       this.dislogVisible = false
       this.$emit('dislogDetails',this.dislogVisible)
+    },
+    handleChange(){
+      console.log(this.cascaderKeys)
+      if (this.cascaderKeys.length > 0) {
+        this.addForm.pid = this.cascaderKeys[this.cascaderKeys.length - 1]
+        this.addForm.level = this.cascaderKeys.length + 1
+      }else{
+        this.addForm.pid = null
+        this.addForm.level = 0
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.el-cascader{
+  width: 100%;
+}
 
 </style>

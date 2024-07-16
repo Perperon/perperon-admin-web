@@ -83,6 +83,8 @@
 import TabsPage from 'components/common/TabsPage'
 import Breadcrumb from 'components/common/Breadcrumb'
 import userRoleSwitch from 'views/account/roleSwitch/userRoleSwitch'
+import {getRoleId} from 'utils/support'
+import {isEntry} from 'utils/date'
 export default {
   name: 'layout',
   components:{
@@ -143,7 +145,7 @@ export default {
     },
     roleDialog() {
       if (!this.roleId){
-        this.roleId=this.$store.getters.roleList[0].id
+        this.roleId=isEntry(getRoleId())?this.$store.getters.roleList[0].id:getRoleId()
       }
       this.roleList=this.$store.getters.roleList
       this.id = this.$store.getters.userInfo.id

@@ -1,6 +1,6 @@
 import { login, logout, getInfo, getMenu } from 'api/login'
 import { getToken, setToken, removeToken } from 'utils/auth'
-import { getRoleId } from 'utils/support'
+import { getRoleId,removeRoleId,getRoleName,removeRoleName } from 'utils/support'
 import { isEntry } from 'utils/date'
 
 const account = {
@@ -67,10 +67,9 @@ const account = {
           commit('SET_AVATAR', data.icon)
           commit('SET_USERINFO', data.userInfo)
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLE_NAME', data.roleList[0].name)
+            commit('SET_ROLE_NAME', isEntry(getRoleName())?data.roleList[0].name:getRoleName())
             commit('SET_ROLES', data.roles)
             commit('SET_ROLE_LIST', data.roleList)
-            console.log(getRoleId())
             getMenu(isEntry(getRoleId())?data.roleList[0].id:getRoleId()).then(res => {
               const data = res.data
               commit('SET_MENUS', data.menus)
@@ -95,6 +94,8 @@ const account = {
           commit('SET_USERINFO', null)
           commit('RESET_TABS')
           removeToken()
+          removeRoleId()
+          removeRoleName()
           resolve()
         }).catch(error => {
           reject(error)

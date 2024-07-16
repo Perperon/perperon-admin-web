@@ -93,9 +93,36 @@
           :selection-type='false'
           :expand-type='false'
           show-index index-text='#' border>
-<!--          <template slot="icons" scope="scope">
-            {{ scope.row.likes.join(',') }}
-          </template>-->
+          <template slot="icons" slot-scope="scope">
+            <svg-icon :icon-class='scope.row.icon'></svg-icon>
+          </template>
+          <template slot="isok" slot-scope="scope">
+            <i class="el-icon-success" v-if='scope.row.status' style='color: lightgreen'></i>
+            <i class="el-icon-error" v-if='!scope.row.status' style='color: lightcoral'></i>
+          </template>
+          <template slot="level" slot-scope="scope">
+            <el-tag v-if='scope.row.level===1'>一级</el-tag>
+            <el-tag type="success" v-else-if='scope.row.level===2'>二级</el-tag>
+            <el-tag type="warning" v-else-if='scope.row.level===3'>三级</el-tag>
+          </template>
+          <template slot="opt" slot-scope="scope">
+            <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'product:category:update'">
+              <el-button
+                size='mini'
+                type='primary' round
+                @click='editDialog(scope.$index,scope.row.id)'>
+                <svg-icon icon-class='edit'></svg-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class='item' effect='dark' content='删除' placement='top' v-has="'product:category:delete'">
+              <el-button
+                size='mini'
+                type='danger' round
+                @click="deleteHandler(scope.$index,scope.row.id)">
+                <svg-icon icon-class='delete'></svg-icon>
+              </el-button>
+            </el-tooltip>
+          </template>
         </tree-table>
       </el-card>
       <Pagination :query-info='params' @query='initList'></Pagination>
@@ -130,11 +157,13 @@ export default {
       columns:[
         {
           label: '分类名称',
+          headerAlign: 'center',
           align: 'center',
           prop: 'name'
         },
         {
           label: '分类图标',
+          headerAlign: 'center',
           align: 'center',
           prop: 'icon',
           type: 'template',
@@ -142,8 +171,26 @@ export default {
         },
         {
           label: '状态',
+          headerAlign: 'center',
           align: 'center',
-          prop: 'status'
+          prop: 'status',
+          type: 'template',
+          template: 'isok',
+        },
+        {
+          label: '排序',
+          headerAlign: 'center',
+          align: 'center',
+          prop: 'level',
+          type: 'template',
+          template: 'level',
+        },
+        {
+          label: '操作',
+          headerAlign: 'center',
+          align: 'center',
+          type: 'template',
+          template: 'opt',
         }
       ]
     }
@@ -191,7 +238,7 @@ export default {
       this.initList(this.params)
     },
     deleteHandler(index,id){
-      this.$confirm('确认要删除此用户', '删除提示', {
+      this.$confirm('确认要删除此商品类型', '删除提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

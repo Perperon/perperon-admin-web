@@ -8,6 +8,14 @@ export function listByPage(params){
   })
 }
 
+export function listByParentPage(params){
+  return request({
+    url: '/productcategory/listByParentPage',
+    method: 'get',
+    params: params
+  })
+}
+
 export function update(data){
   return request({
     url: '/productcategory/update',

@@ -1,7 +1,10 @@
 import Cookies from "js-cookie";
 
 const SupportKey='supportKey';
+
 const RoleId='roleId';
+
+const RoleName='roleName';
 
 export function getSupport() {
   return Cookies.get(SupportKey)
@@ -23,6 +26,22 @@ export function getRoleId() {
   return Cookies.get(RoleId)
 }
 
-export function setRoleId(isSupport) {
-  return Cookies.set(RoleId, isSupport,{ expires: 1 })
+export function setRoleId(roleId) {
+  return Cookies.set(RoleId, roleId,{ expires: 1 })
+}
+
+export function removeRoleId() {
+  return Cookies.remove(RoleId)
+}
+
+export function getRoleName() {
+  return Cookies.get(RoleName)
+}
+
+export function setRoleName(roleName) {
+  return Cookies.set(RoleName, roleName,{ expires: 1 })
+}
+
+export function removeRoleName() {
+  return Cookies.remove(RoleName)
 }
