@@ -114,8 +114,13 @@ export default {
   margin-bottom: 15px;
 }
 .roleSiwtch{
+  display: inline-block;
   margin-right: 38px;
   color: #606266;
   font-size: 14px;
 }
+.el-radio-group {
+   margin-right: 328px;
+ }
+
 </style>
