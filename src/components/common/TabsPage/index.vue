@@ -29,12 +29,17 @@ export default {
       if (activeName === targetName) {
         tabs.forEach((tab, index) => {
           if (tab.name === targetName) {
-            let nextTab = tabs[index + 1] || tabs[index - 1];
-            if (nextTab) {
-              activeName = nextTab.name;
+            if (tab.name !== '/index'){
+              let nextTab = tabs[index + 1] || tabs[index - 1];
+              if (nextTab) {
+                activeName = nextTab.name;
+              }
             }
           }
         });
+      }
+      if (targetName === '/index'){
+        return this.$message.warning('首页不能关闭')
       }
       this.tabsValue = activeName;
       this.tableTabs = tabs.filter(tab => tab.name !== targetName);

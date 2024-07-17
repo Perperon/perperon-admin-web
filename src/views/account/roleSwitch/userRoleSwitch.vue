@@ -8,9 +8,12 @@
     <!--内容区-->
     <el-form :model='roleForm' ref='roleFormRef' label-width='100px'>
       <div class='roleLab'>
-        <label>当前角色: {{this.$store.getters.roleName}}</label>
+        <label>当前角色: &nbsp;&nbsp;&nbsp;{{this.$store.getters.roleName}}</label>
       </div>
       <el-radio-group v-model="roleForm.radioRole">
+        <template>
+          <label class='roleSiwtch'>选择角色: </label>
+        </template>
         <el-radio @change='changeRadio(role.name)'  v-for='role in roleForm.roleList' :id='role.id' :key='role.id' :label='role.id' name='radioRole'>{{role.name}}</el-radio>
       </el-radio-group>
     </el-form>
@@ -109,5 +112,10 @@ export default {
   float: left;
   margin-left: 45px;
   margin-bottom: 15px;
+}
+.roleSiwtch{
+  margin-right: 38px;
+  color: #606266;
+  font-size: 14px;
 }
 </style>

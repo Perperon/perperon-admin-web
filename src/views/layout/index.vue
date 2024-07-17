@@ -15,16 +15,16 @@
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>
-            <a @click="handlerClick('/home')">首页</a>
+          <el-dropdown-item command='home'>
+            <i class="el-icon-s-home"></i>首页
           </el-dropdown-item>
-          <el-dropdown-item>
-            <a @click='roleDialog()'>切换角色</a>
+          <el-dropdown-item command='roleSwitch'>
+            <i class="el-icon-user"></i>切换角色
           </el-dropdown-item>
-          <el-dropdown-item>
-            <a @click="handlerClick('/userCenter')">个人中心</a>
+          <el-dropdown-item command='userCenter'>
+            <i class="el-icon-s-custom"></i>个人中心
           </el-dropdown-item>
-          <el-dropdown-item command='logout' divided>退出登录</el-dropdown-item>
+          <el-dropdown-item command='logout' divided><svg-icon icon-class='logout'></svg-icon>退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-header>
@@ -126,6 +126,12 @@ export default {
     handleCommand(command) {
       if (command === 'logout') {
         this.logoutAccount()
+      } else if (command === 'home') {
+        this.handlerClick('/home')
+      } else if (command === 'roleSwitch') {
+        this.roleDialog()
+      } else if(command === 'userCenter'){
+        this.handlerClick('/userCenter')
       }
     },
     openTab(item){
