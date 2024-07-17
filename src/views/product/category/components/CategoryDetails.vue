@@ -92,30 +92,45 @@ export default {
     }
   },
   watch: {
-    isDialog(val) {
-      this.dialogVisible = val
-      if (this.isEdit){
-        getById(this.id).then(response => {
-          this.addForm = response.data
-          this.addForm.updatedBy = ref(store.getters.userInfo.id)
-          this.addForm.updatedTime = formattedTime()
-        })
-      }else{
-        this.addForm = Object.assign({},defaultFrom)
+    async isDialog(val) {
+      if (this.isEdit) {
+        try {
+          const response = await getById(this.id);
+          this.addForm = { ...response.data, updatedBy: store.getters.userInfo.id, updatedTime: formattedTime() };
+          if (response.data.pid !== null) {
+            const res = await getById(response.data.pid);
+            if (res.data.pid !== null) {
+              this.cascaderKeys.push(res.data.pid);
+            }
+            this.cascaderKeys.push(response.data.pid);
+          }
+        } catch (error) {
+          console.error(error);
+          this.$message.error('Error fetching data');
+        }
+      } else {
+        this.addForm = { ...defaultFrom };
       }
-      if (val){
-        listByParentPage().then(res =>{
-          if (res.code !== 200) return this.$message.error(res.message)
-          this.options = res.data.list
-          console.log(this.options)
-        })
+      if (val) {
+        try {
+          const res = await listByParentPage();
+          if (res.code !== 200) {
+            return this.$message.error(res.message);
+          }
+          this.options = res.data.list;
+        } catch (error) {
+          console.error(error);
+          this.$message.error('Error fetching data');
+        }
       }
+      this.dialogVisible = val;
     }
   },
   methods: {
     handleBeforeClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
+          this.addDialogClosed()
           this.dislogVisible = false
           this.$emit('dislogDetails',this.dislogVisible)
           done()
@@ -150,11 +165,11 @@ export default {
       })
     },
     dialogVisibleBut(){
+      this.addDialogClosed()
       this.dislogVisible = false
       this.$emit('dislogDetails',this.dislogVisible)
     },
     handleChange(){
-      console.log(this.cascaderKeys)
       if (this.cascaderKeys.length > 0) {
         this.addForm.pid = this.cascaderKeys[this.cascaderKeys.length - 1]
         this.addForm.level = this.cascaderKeys.length + 1

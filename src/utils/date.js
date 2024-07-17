@@ -52,9 +52,7 @@ export function formattedTime() {
     second: '2-digit'
   };
   const formatter = new Intl.DateTimeFormat('default', options);
-
   const formattedTime = formatter.format(now).replace(/\//g, '-'); // 将斜杠替换为连字符
-  console.log(formattedTime); // 输出格式化的当前时间
   return formattedTime;
 }
 
