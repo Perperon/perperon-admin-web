@@ -225,13 +225,13 @@ export default {
     addDialog() {
       this.isDialog = true;
       this.isEdit = false;
-      this.dialogTitle = '添加用户'
+      this.dialogTitle = '添加商品分类'
     },
     editDialog(index, id) {
       this.isDialog = true;
       this.isEdit = true;
       this.id = id;
-      this.dialogTitle = '修改用户'
+      this.dialogTitle = '修改商品分类'
     },
     handleDialog(flag){
       this.isDialog = flag;

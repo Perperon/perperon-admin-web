@@ -13,10 +13,10 @@
         <el-cascader
           v-model="cascaderKeys"
           :options="options"
-          expand-trigger='hover'
           :props="cascaderProps"
           clearable
-          change-on-select
+          :expand-trigger="'hover'"
+          :check-strictly="true"
           @change="handleChange"></el-cascader>
       </el-form-item>
       <el-form-item label='分类名称:' prop='name'>
@@ -81,7 +81,9 @@ export default {
       cascaderProps:{
         value: 'id',
         label: 'name',
-        children: 'children'
+        children: 'children',
+        expandTrigger: 'hover',
+        checkStrictly: true
       },
       cascaderKeys:[],
       addFormRules: {
@@ -117,7 +119,7 @@ export default {
           if (res.code !== 200) {
             return this.$message.error(res.message);
           }
-          this.options = res.data.list;
+          this.options = this.filterChildren(res.data.list)
         } catch (error) {
           console.error(error);
           this.$message.error('Error fetching data');
@@ -177,6 +179,16 @@ export default {
         this.addForm.pid = null
         this.addForm.level = 0
       }
+    },
+    filterChildren(arr) {
+      return arr.map(item => {
+        if (item.children && item.children.length > 0) {
+          item.children = this.filterChildren(item.children);
+        } else {
+          delete item.children;
+        }
+        return item;
+      }).filter(item => item.name);
     }
   }
 }
