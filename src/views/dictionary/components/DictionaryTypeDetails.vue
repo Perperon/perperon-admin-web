@@ -9,8 +9,20 @@
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
       <input type='hidden' v-model='addForm.userId'/>
-      <el-form-item label='参数名称:' prop='name'>
+      <el-form-item label='字典类型名称:' prop='name'>
         <el-input v-model='addForm.name'></el-input>
+      </el-form-item>
+      <el-form-item label='字典类型编号:' prop='code'>
+        <el-input v-model='addForm.code' ></el-input>
+      </el-form-item>
+      <el-form-item label='是否启用:' prop='status'>
+        <el-radio-group v-model="addForm.status">
+          <el-radio :label="true">启用</el-radio>
+          <el-radio :label="false">禁用</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label='备注:' prop='remark'>
+        <el-input type="textarea" v-model='addForm.remark'></el-input>
       </el-form-item>
     </el-form>
     <!--底部区-->
@@ -22,19 +34,19 @@
 </template>
 
 <script>
-import { update, create, getById } from 'api/categoryParam'
-import { getDictionaryByCode } from 'api/dictionary'
+import { update, create, getById } from 'api/dictionarytype'
 import {ref} from 'vue'
 import store from 'store'
 import { formattedTime } from 'utils/date'
 const defaultFrom = {
-  name: null,
-  userId: ref(store.getters.userInfo.id),
-  categoryId: null,
-  typeId: null
+  name: '',
+  code: '',
+  remark:'',
+  status: true,
+  userId: ref(store.getters.userInfo.id)
 }
 export default {
-  name: 'CategoryParamDetails',
+  name: 'DictionaryTypeDetails',
   props: {
     isEdit: {
       type: Boolean,
@@ -46,19 +58,11 @@ export default {
     },
     dialogTitle:{
       type: String,
-      default: '添加'
+      default: '添加',
     },
     id:{
       type: String,
-      default: null
-    },
-    categoryId:{
-      type: String,
-      default: null
-    },
-    activeName:{
-      type: String,
-      default: null
+      default: null,
     }
   },
   data () {
@@ -67,8 +71,11 @@ export default {
       addForm: Object.assign({},defaultFrom),
       addFormRules: {
         name: [
-          { required: true, message: '参数名称', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }]
+          { required: true, message: '字典类型名称', trigger: 'blur' },
+          { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }],
+        code: [
+          { required: true, message: '字典编码', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 30 个字符', trigger: 'blur' }]
       }
     }
   },
@@ -77,18 +84,12 @@ export default {
       if (this.isEdit) {
         try {
           const response = await getById(this.id);
-          this.addForm = { ...response.data, updatedBy: store.getters.userInfo.id, updated: formattedTime() };
+          this.addForm = { ...response.data, updatedBy: store.getters.userInfo.id, updatedTime: formattedTime() };
         } catch (error) {
           this.$message.error('Error fetching data');
         }
       } else {
         this.addForm = { ...defaultFrom };
-        this.addForm.categoryId = this.categoryId
-        const res = await getDictionaryByCode(this.activeName);
-        console.log(res)
-        this.addForm.typeId = res.data.id
-
-
       }
       this.dialogVisible = val;
     }
@@ -110,7 +111,6 @@ export default {
     onSubmit(){
       this.$refs.addFormRef.validate((valid) => {
         if (!valid)  return
-        console.log(this.addForm)
         if (this.isEdit) {
           update(this.addForm).then(res => {
             if (res.code !== 200) return this.$message.error(res.message)
@@ -138,8 +138,4 @@ export default {
 </script>
 
 <style scoped>
-.el-cascader{
-  width: 100%;
-}
-
 </style>

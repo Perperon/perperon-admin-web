@@ -1,15 +1,8 @@
 import request from "utils/request"
 
-export function getDictionaryByCode(code){
-  return request({
-    url: '/dictionary/getDictionaryByCode/'+code,
-    method: 'get'
-  })
-}
-
 export function listByPage(params){
   return request({
-    url: '/dictionary/listByPage',
+    url: '/dictionarytype/listByPage',
     method: 'get',
     params: params
   })
@@ -17,7 +10,7 @@ export function listByPage(params){
 
 export function update(data){
   return request({
-    url: '/dictionary/update',
+    url: '/dictionarytype/update',
     method: 'put',
     data: data
   })
@@ -25,7 +18,7 @@ export function update(data){
 
 export function create(data){
   return request({
-    url:'/dictionary/create',
+    url:'/dictionarytype/create',
     method: 'post',
     data: data
   })
@@ -33,21 +26,21 @@ export function create(data){
 
 export function getById(id){
   return request({
-    url:'/dictionary/getById/'+id,
+    url:'/dictionarytype/getById/'+id,
     method: 'get'
   })
 }
 
 export function deleteById(id){
   return request({
-    url:'/dictionary/delete/'+id,
+    url:'/dictionarytype/delete/'+id,
     method: 'delete'
   })
 }
 
 export function deleteBatches(ids){
   return request({
-    url:'/dictionary/deleteBatches',
+    url:'/dictionarytype/deleteBatches',
     method: 'delete',
     data: ids
   })
