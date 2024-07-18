@@ -1,14 +1,6 @@
 <template>
   <div class='app-container'>
     <div class='table-container'>
-      <el-row :gutter='20'>
-        <el-col :span='16'>
-          <el-button v-has="'category:param:add'" @click='addDialog' class='btnClass'>
-            添加分类参数
-          </el-button>
-        </el-col>
-      </el-row>
-
       <!--列表区-->
       <el-card>
         <el-alert
@@ -28,25 +20,143 @@
         </el-row>
         <!--tab区-->
         <el-tabs type="border-card" v-model='activeName' @tab-click='handleClick'>
-          <el-tab-pane label="动态参数" name="first"><el-button :disabled='isDisabled' type='primary' size='small'>动态参数</el-button></el-tab-pane>
-          <el-tab-pane label="静态参数" name="second"><el-button :disabled='isDisabled' type='primary' size='small'>静态参数</el-button></el-tab-pane>
+          <el-tab-pane label="动态参数" name="dynamicParam">
+            <el-button style="float: left" :disabled='isDisabled' type='primary' size='small' @click='addDialog'>动态参数添加</el-button>
+            <el-table
+              ref="multipleTable"
+              :data='specsList'
+              border
+              stripe
+              style='width: 100%'
+              :default-sort="{prop: 'created', order: 'descending'}">
+
+              <el-table-column type='expand'>
+                <template slot-scope='props'>
+                  <el-form label-position='left' inline class='from-table'>
+                    <el-form-item label='参数名称'>
+                      <span>{{ props.row.name }}</span>
+                    </el-form-item>
+                    <el-form-item label='创建人'>
+                      <span>{{ props.row.userName }}</span>
+                    </el-form-item>
+                    <el-form-item label='创建时间'>
+                      <span>{{ props.row.created }}</span>
+                    </el-form-item>
+                    <el-form-item label='更新人'>
+                      <span>{{ props.row.updateName }}</span>
+                    </el-form-item>
+                    <el-form-item label='更新时间'>
+                      <span>{{ props.row.updated }}</span>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </el-table-column>
+              <el-table-column prop='name' label='参数名称' align='center'>
+              </el-table-column>
+              <el-table-column label='操作'>
+                <template slot-scope='scope'>
+                  <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'category:param:update'">
+                    <el-button
+                      size='mini'
+                      type='primary' round
+                      @click='editDialog(scope.$index,scope.row.id)'>
+                      <svg-icon icon-class='edit'></svg-icon>
+                    </el-button>
+                  </el-tooltip>
+                  <el-tooltip class='item' effect='dark' content='删除' placement='top' v-has="'category:param:delete'">
+                    <el-button
+                      size='mini'
+                      type='danger' round
+                      @click="deleteHandler(scope.$index,scope.row.id)">
+                      <svg-icon icon-class='delete'></svg-icon>
+                    </el-button>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="静态参数" name="staticParam">
+            <el-button style="float: left" :disabled='isDisabled' type='primary' size='small' @click='addDialog'>静态参数添加</el-button>
+            <el-table
+              ref="multipleTable"
+              :data='attrsList'
+              border
+              stripe
+              style='width: 100%'
+              :default-sort="{prop: 'created', order: 'descending'}">
+
+              <el-table-column type='expand'>
+                <template slot-scope='props'>
+                  <el-form label-position='left' inline class='from-table'>
+                    <el-form-item label='参数名称'>
+                      <span>{{ props.row.name }}</span>
+                    </el-form-item>
+                    <el-form-item label='创建人'>
+                      <span>{{ props.row.userName }}</span>0
+                    </el-form-item>
+                    <el-form-item label='创建时间'>
+                      <span>{{ props.row.created }}</span>
+                    </el-form-item>
+                    <el-form-item label='更新人'>
+                      <span>{{ props.row.updateName }}</span>
+                    </el-form-item>
+                    <el-form-item label='更新时间'>
+                      <span>{{ props.row.updated }}</span>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </el-table-column>
+              <el-table-column prop='name' label='参数名称' align='center'>
+              </el-table-column>
+              <el-table-column label='操作'>
+                <template slot-scope='scope'>
+                  <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'category:param:update'">
+                    <el-button
+                      size='mini'
+                      type='primary' round
+                      @click='editDialog(scope.$index,scope.row.id)'>
+                      <svg-icon icon-class='edit'></svg-icon>
+                    </el-button>
+                  </el-tooltip>
+                  <el-tooltip class='item' effect='dark' content='删除' placement='top' v-has="'category:param:delete'">
+                    <el-button
+                      size='mini'
+                      type='danger' round
+                      @click="deleteHandler(scope.$index,scope.row.id)">
+                      <svg-icon icon-class='delete'></svg-icon>
+                    </el-button>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
         </el-tabs>
       </el-card>
-      <Pagination :query-info='params' @query='initList'></Pagination>
-<!--      <category-details :is-edit='isEdit' :dialog-title='dialogTitle' :table-data='categoryParamsData' :is-dialog='isDialog' :id='id'-->
-<!--                        @dislogDetails='handleDialog'></category-details>-->
+      <Pagination :query-info='params' @query='getParams'></Pagination>
+      <category-param-details
+          :is-edit='isEdit'
+          :dialog-title='dialogTitle'
+          :table-data='categoryParamsData'
+          :is-dialog='isDialog' :id='id'
+          :categoryId='categoryId'
+          :activeName='activeName'
+          @dislogDetails='handleDialog'>
+      </category-param-details>
     </div>
   </div>
 </template>
 
 <script>
 import Pagination from 'components/common/Pagination'
-import { listByPage, deleteById } from 'api/category'
+import CategoryParamDetails from './components/CategoryParamDetails'
+import { listByPage } from 'api/category'
+import { listByParamPage,deleteById } from 'api/categoryParam'
 import { params } from 'utils/query'
 export default {
   name: 'index',
   components:{
-    Pagination
+    Pagination,
+    CategoryParamDetails
   },
   data() {
     return {
@@ -54,9 +164,7 @@ export default {
       selectCategoryKey: [],
       categoryParamsData: [],
       multipleSelection: [],
-      params: Object.assign({
-        status: null,
-      }, params),
+      params: Object.assign({}, params),
       caderProps:{
         value: 'id',
         label: 'name',
@@ -66,7 +174,10 @@ export default {
       isEdit: false,
       isDialog: false,
       dialogTitle: null,
-      activeName: 'first'
+      activeName: 'dynamicParam',
+      specsList:[],
+      attrsList: [],
+      categoryId: null
     }
   },
   created() {
@@ -78,11 +189,10 @@ export default {
     }
   },
   methods: {
-    initList(queryInfo) {
-      listByPage(queryInfo).then(res => {
+    initList() {
+      listByPage().then(res => {
         if (res.code !== 200) return this.$message.error(res.message)
         this.categoryParamsData = this.filterChildren(res.data.list)
-        this.params.total = res.data.total
       }).catch(err => {
         this.$message.error(err)
       })
@@ -90,20 +200,21 @@ export default {
     addDialog() {
       this.isDialog = true;
       this.isEdit = false;
-      this.dialogTitle = '添加分类参数'
+      this.categoryId=this.params.categoryId
+      this.dialogTitle = this.activeName==='dynamicParam'?'添加动态分类参数':'添加静态分类参数'
     },
     editDialog(index, id) {
       this.isDialog = true;
       this.isEdit = true;
       this.id = id;
-      this.dialogTitle = '修改分类参数'
+      this.dialogTitle = this.activeName==='dynamicParam'?'修改动态分类参数':'修改静态分类参数'
     },
     handleDialog(flag){
       this.isDialog = flag;
-      this.initList(this.params)
+      this.getParams()
     },
     deleteHandler(index,id){
-      this.$confirm('确认要删除此商品类型', '删除提示', {
+      this.$confirm('确认要删除分类参数', '删除提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -114,17 +225,30 @@ export default {
             type: 'success',
             duration: 1000
           });
-          this.initList(this.params);
+          this.getParams()
         })
       })
     },
     handleChange(){
-       //只能选着三级分类
+       this.getParams()
+    },
+    async getParams(){
+      //只能选择三级分类
       if (this.selectCategoryKey.length !== 3) {
         this.selectCategoryKey = []
         return
       }
-      console.log(this.selectCategoryKey)
+      //发起请求，获取数据
+      this.params.typeCode = this.activeName
+      this.params.categoryId = this.selectCategoryKey[this.selectCategoryKey.length - 1]
+      const res = await listByParamPage(this.params)
+      if (res.code !== 200) return this.$message.error(res.message)
+      if (this.activeName === 'dynamicParam') {
+        this.specsList = res.data.list
+      } else {
+        this.attrsList = res.data.list
+      }
+      this.params.total = res.data.total
     },
     filterChildren(arr) {
       return arr.map(item => {
@@ -136,8 +260,8 @@ export default {
         return item;
       }).filter(item => item.name);
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleClick() {
+      this.getParams()
     }
   }
 }
