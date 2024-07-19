@@ -138,8 +138,5 @@ export default {
 </script>
 
 <style scoped>
-.el-cascader{
-  width: 100%;
-}
 
 </style>

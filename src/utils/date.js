@@ -57,5 +57,5 @@ export function formattedTime() {
 }
 
 export function isEntry(value){
-  return value === undefined || value === ''
+  return value === undefined || value === '' || value === null
 }
