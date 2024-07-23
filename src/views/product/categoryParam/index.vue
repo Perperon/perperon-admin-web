@@ -32,7 +32,7 @@
 
               <el-table-column type='expand'>
                 <template slot-scope='scope'>
-                  <el-tag v-for='(item,index) in scope.row.attrValue' :key='index' closable>{{item}}</el-tag>
+                  <el-tag v-for='(item,index) in scope.row.attrValue' :key='index' closable @close='handleClose(index,scope.row)'>{{item}}</el-tag>
                   <el-input
                     class="input-new-tag"
                     v-if="scope.row.inputVisible"
@@ -43,12 +43,12 @@
                     @blur="handleInputConfirm(scope.row)"
                   >
                   </el-input>
-                  <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
+                  <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+</el-button>
                 </template>
               </el-table-column>
               <el-table-column prop='name' label='参数名称' align='center'>
               </el-table-column>
-              <el-table-column label='操作'>
+              <el-table-column label='操作' align='center'>
                 <template slot-scope='scope'>
                   <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'category:param:update'">
                     <el-button
@@ -81,29 +81,24 @@
               :default-sort="{prop: 'created', order: 'descending'}">
 
               <el-table-column type='expand'>
-                <template slot-scope='props'>
-                  <el-form label-position='left' inline class='from-table'>
-                    <el-form-item label='属性名称'>
-                      <span>{{ props.row.name }}</span>
-                    </el-form-item>
-                    <el-form-item label='创建人'>
-                      <span>{{ props.row.userName }}</span>0
-                    </el-form-item>
-                    <el-form-item label='创建时间'>
-                      <span>{{ props.row.created }}</span>
-                    </el-form-item>
-                    <el-form-item label='更新人'>
-                      <span>{{ props.row.updateName }}</span>
-                    </el-form-item>
-                    <el-form-item label='更新时间'>
-                      <span>{{ props.row.updated }}</span>
-                    </el-form-item>
-                  </el-form>
+                <template slot-scope='scope'>
+                  <el-tag v-for='(item,index) in scope.row.attrValue' :key='index' closable @close='handleClose(index,scope.row)'>{{item}}</el-tag>
+                  <el-input
+                    class="input-new-tag"
+                    v-if="scope.row.inputVisible"
+                    v-model="scope.row.inputValue"
+                    ref="saveTagInput"
+                    size="small"
+                    @keyup.enter.native="handleInputConfirm(scope.row)"
+                    @blur="handleInputConfirm(scope.row)"
+                  >
+                  </el-input>
+                  <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+</el-button>
                 </template>
               </el-table-column>
-              <el-table-column prop='name' label='属性名称' align='center'>
+              <el-table-column prop='name' label='参数名称' align='center'>
               </el-table-column>
-              <el-table-column label='操作'>
+              <el-table-column label='操作' align='center'>
                 <template slot-scope='scope'>
                   <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'category:param:update'">
                     <el-button
@@ -145,7 +140,7 @@
 import Pagination from 'components/common/Pagination'
 import CategoryParamDetails from './components/CategoryParamDetails'
 import { listByPage } from 'api/category'
-import { listByParamPage,deleteById } from 'api/categoryParam'
+import { listByParamPage,deleteById,update } from 'api/categoryParam'
 import { params } from 'utils/query'
 import { isEntry } from 'utils/date'
 export default {
@@ -232,6 +227,8 @@ export default {
       //只能选择三级分类
       if (this.selectCategoryKey.length !== 3) {
         this.selectCategoryKey = []
+        this.specsList = []
+        this.attrsList = []
         return
       }
       //发起请求，获取数据
@@ -279,7 +276,18 @@ export default {
       }
       row.attrValue.push(row.inputValue.trim())
       row.inputValue = '';
-      //保存数据到后端
+      this.updateAttrValue(row)
+    },
+    handleClose(index,row){
+      row.attrValue.splice(index,1)
+      this.updateAttrValue(row)
+    },
+    updateAttrValue(row){
+      //参数值-保存数据到后端
+      update({attrValue:row.attrValue.join(' '),id: row.id}).then(res =>{
+        if (res.code !== 200) return this.$message.error(res.message)
+        this.$message.success(res.message)
+      })
     }
   }
 }
