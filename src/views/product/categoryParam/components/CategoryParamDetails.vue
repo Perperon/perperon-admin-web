@@ -8,7 +8,7 @@
     @close='addDialogClosed'>
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
-      <input type='hidden' v-model='addForm.userId'/>
+      <input type='hidden' v-model='addForm.userId' />
       <el-form-item label='参数名称:' prop='name'>
         <el-input v-model='addForm.name'></el-input>
       </el-form-item>
@@ -24,9 +24,10 @@
 <script>
 import { update, create, getById } from 'api/categoryParam'
 import { getDictionaryByCode } from 'api/dictionary'
-import {ref} from 'vue'
+import { ref } from 'vue'
 import store from 'store'
 import { formattedTime } from 'utils/date'
+
 const defaultFrom = {
   name: null,
   userId: ref(store.getters.userInfo.id),
@@ -40,31 +41,31 @@ export default {
       type: Boolean,
       default: false
     },
-    isDialog:{
+    isDialog: {
       type: Boolean,
       default: false
     },
-    dialogTitle:{
+    dialogTitle: {
       type: String,
       default: '添加'
     },
-    id:{
+    id: {
       type: String,
       default: null
     },
-    categoryId:{
+    categoryId: {
       type: String,
       default: null
     },
-    activeName:{
+    activeName: {
       type: String,
       default: null
     }
   },
-  data () {
+  data() {
     return {
       dialogVisible: false,
-      addForm: Object.assign({},defaultFrom),
+      addForm: Object.assign({}, defaultFrom),
       addFormRules: {
         name: [
           { required: true, message: '参数名称', trigger: 'blur' },
@@ -76,21 +77,21 @@ export default {
     async isDialog(val) {
       if (this.isEdit) {
         try {
-          const response = await getById(this.id);
-          this.addForm = { ...response.data, updatedBy: store.getters.userInfo.id, updated: formattedTime() };
+          const response = await getById(this.id)
+          this.addForm = { ...response.data, updatedBy: store.getters.userInfo.id, updated: formattedTime() }
         } catch (error) {
-          this.$message.error('Error fetching data');
+          this.$message.error('Error fetching data')
         }
       } else {
-        this.addForm = { ...defaultFrom };
+        this.addForm = { ...defaultFrom }
         this.addForm.categoryId = this.categoryId
-        const res = await getDictionaryByCode(this.activeName);
+        const res = await getDictionaryByCode(this.activeName)
         console.log(res)
         this.addForm.typeId = res.data.id
 
 
       }
-      this.dialogVisible = val;
+      this.dialogVisible = val
     }
   },
   methods: {
@@ -99,39 +100,39 @@ export default {
         .then(_ => {
           this.addDialogClosed()
           this.dislogVisible = false
-          this.$emit('dislogDetails',this.dislogVisible)
+          this.$emit('dislogDetails', this.dislogVisible)
           done()
         })
     },
-    addDialogClosed(){
+    addDialogClosed() {
       //关闭时重置表单
       this.$refs.addFormRef.resetFields()
     },
-    onSubmit(){
+    onSubmit() {
       this.$refs.addFormRef.validate((valid) => {
-        if (!valid)  return
+        if (!valid) return
         console.log(this.addForm)
         if (this.isEdit) {
           update(this.addForm).then(res => {
             if (res.code !== 200) return this.$message.error(res.message)
             this.$message.success(res.message)
             this.dialogVisible = false
-            this.$emit('dislogDetails',this.dislogVisible)
+            this.$emit('dislogDetails', this.dislogVisible)
           })
-        }else{
+        } else {
           create(this.addForm).then(res => {
             if (res.code !== 200) return this.$message.error(res.message)
             this.$message.success(res.message)
             this.dialogVisible = false
-            this.$emit('dislogDetails',this.dislogVisible)
+            this.$emit('dislogDetails', this.dislogVisible)
           })
         }
       })
     },
-    dialogVisibleClose(){
+    dialogVisibleClose() {
       this.addDialogClosed()
       this.dislogVisible = false
-      this.$emit('dislogDetails',this.dislogVisible)
+      this.$emit('dislogDetails', this.dislogVisible)
     }
   }
 }
