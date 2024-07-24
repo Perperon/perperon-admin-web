@@ -315,12 +315,4 @@ export default {
   float: left;
   text-align: start;
 }
-.search {
-  float: right;
-  margin-bottom: 10px;
-}
-.select-form{
-  float: left;
-  margin-left: 0;
-}
 </style>

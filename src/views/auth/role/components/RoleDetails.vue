@@ -9,8 +9,8 @@
     <!--内容区-->
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
       <input type='hidden' v-model='addForm.userId'/>
-      <input type='hidden' v-model='addForm.updateBy'/>
-      <input type='hidden' v-model='addForm.updateTime'/>
+      <input type='hidden' v-model='addForm.updatedBy'/>
+      <input type='hidden' v-model='addForm.updatedTime'/>
       <el-form-item label='角色名:' prop='name'>
         <el-input v-model='addForm.name' :disabled="isEdit"></el-input>
       </el-form-item>

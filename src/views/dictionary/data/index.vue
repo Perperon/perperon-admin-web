@@ -261,12 +261,5 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.search {
-  float: right;
-  margin-bottom: 10px;
-}
-.select-form{
-  float: left;
-  margin-left: 0;
-}
+
 </style>

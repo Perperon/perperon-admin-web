@@ -1,57 +1,215 @@
 <template>
   <div class="app-container">
-    <breadcrumb></breadcrumb>
-    <el-card class="box-card">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-input placeholder="请输入内容">
-          <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </el-col>
-      </el-row>
+    <!--卡片视图-搜索区-->
+    <el-card class="filter-container" shadow="never">
+      <div>
+        <div style="float:left">
+          <i class="el-icon-search"></i>
+          <span>筛选搜索</span>
+        </div>
+        <el-button
+          style="float:right"
+          type="primary"
+          @click="searchProductList()"
+          size="small">
+          查询搜索
+        </el-button>
+        <el-button
+          style="float:right;margin-right: 15px"
+          @click="handleResetSearch()"
+          size="small">
+          重置
+        </el-button>
+      </div>
+      <div style="margin-top: 30px">
+        <el-form :inline="true" :model="params" size="small" label-width="80px">
+          <el-form-item label="状态：" class='select-form'>
+            <el-select v-model="params.status" class="input-width" placeholder="全部" clearable>
+              <el-option v-for="item in statusData"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
     </el-card>
-    <el-card class="operate-container" shadow="never">
-      <el-row>
-        <el-col :span="4">
-            <i class="el-icon-tickets" style='float: left'></i>
-            <span style='float: left;position: relative;bottom: 71px;left: 4px'>数据列表</span>
-        </el-col>
-        <el-col :span="20">
-          <el-button class="btn-add" @click="addBrand()" size="mini">
+    <!--列表区-->
+    <div class='table-container'>
+      <el-row :gutter='20'>
+        <el-col :span="16">
+          <el-button class="btnClass" @click="addDialog()">
             添加
           </el-button>
         </el-col>
+        <el-col class='search' :span='4'>
+          <el-input placeholder='请输入商品名称搜索' @keyup.enter.native='searchProductList' v-model="params.name" clearable @clear="searchProductList">
+            <el-button @click="searchProductList" slot='append' icon='el-icon-search'></el-button>
+          </el-input>
+        </el-col>
       </el-row>
-    </el-card>
+
+      <el-card>
+        <el-table
+          ref="multipleTable"
+          :data='productData'
+          border
+          stripe
+          style='width: 100%'
+          @selection-change='handleSelectionChange'
+          :default-sort="{prop: 'created', order: 'descending'}">
+          <el-table-column type='selection' width='55'>
+          </el-table-column>
+          <el-table-column prop="name" label="商品名称" align='center'>
+          </el-table-column>
+          <el-table-column prop="price" label="商品价格" align='center'>
+            <template v-slot='scope'>
+              <span>{{scope.row.price}}元</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="weight" label="商品重量" align='center'>
+            <template v-slot='scope'>
+              <span>{{scope.row.weight}}克</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="status" label="商品状态" align='center'>
+            <template slot-scope='scope'>
+              <el-button v-if='scope.row.status' type="success" icon="el-icon-check" size='mini' circle @click='updateStatus(scope.row.id,scope.row.status)'></el-button>
+              <el-button v-else type="danger" icon="el-icon-circle-close" size='mini' circle @click='updateStatus(scope.row.id,scope.row.status)'></el-button>
+            </template>
+          </el-table-column>
+          <el-table-column prop='created' label='创建时间' sortable align='center'>
+          </el-table-column>
+          <el-table-column width="200px" label="操作">
+            <template slot-scope='scope'>
+              <el-tooltip class='item' effect='dark' content='编辑' placement='top' v-has="'product:update'">
+                <el-button
+                  size='mini'
+                  type='primary' round
+                  @click='editDialog(scope.$index,scope.row.id)'>
+                  <svg-icon icon-class='edit'></svg-icon>
+                </el-button>
+              </el-tooltip>
+              <el-tooltip class='item' effect='dark' content='删除' placement='top' v-has="'product:delete'">
+                <el-button
+                  size='mini'
+                  type='danger' round
+                  @click="deleteHandler(scope.$index,scope.row.id)">
+                  <svg-icon icon-class='delete'></svg-icon>
+                </el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </div>
+    <Pagination :query-info='params' @query='initList'></Pagination>
+    <product-details :is-edit='isEdit' :dialog-title='dialogTitle' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></product-details>
   </div>
 </template>
 
 <script>
-import Breadcrumb from 'components/common/Breadcrumb'
+import Pagination from 'components/common/Pagination'
+import ProductDetails from './components/ProductDetails.vue'
+import { params,resetParams } from 'utils/query'
+import { listByPage,deleteById,update } from 'api/product'
 export default {
   name: "product",
   data(){
     return{
-      levelList: null
+      multipleSelection: [],
+      productData: [],
+      params: Object.assign({},params),
+      isDialog: false,
+      isEdit: false,
+      dialogTitle: null,
+      id: null,
+      btnFlag: true,
+      statusData: [
+        {
+          label: '启用',
+          value: 1
+        },
+        {
+          label: '禁用',
+          value: 0
+        }
+      ]
     }
   },
+  created() {
+    this.initList()
+  },
   components:{
-    Breadcrumb
+    Pagination,
+    ProductDetails
   },
   methods:{
-    addBrand(){
+    initList(queryInfo) {
+      listByPage(queryInfo).then(res => {
+        if (res.code != 200) return this.$message.error("获取数据失败")
+        this.productData = res.data.list
+        this.params.total = res.data.total
+      })
+    },
+    handleSelectionChange(val){
+      this.multipleSelection = val
+      if (this.multipleSelection.length>0){
+        this.btnFlag = false
+      }else {
+        this.btnFlag = true
+      }
+    },
+    searchProductList(){
+      this.initList(this.params)
+    },
+    handleResetSearch() {
+      this.params = Object.assign({}, resetParams);
+    },
+    addDialog() {
+      this.isDialog = true
+      this.isEdit = false
+      this.dialogTitle = '添加商品'
+    },
+    editDialog(index, id) {
+      this.isDialog = true
+      this.isEdit = true
+      this.id = id
+      this.dialogTitle = '修改商品'
+    },
+    handleDialog(flag) {
+      this.isDialog = flag;
+      this.isEdit = flag;
+      this.initList(this.params)
+    },
+    updateStatus(id, status) {
+      update({id: id, status: !status}).then(res => {
+        if (res.code !== 200) return this.$message.error(res.message)
+        this.$message.success(res.message)
+        this.initList(this.params);
+      })
+    },
+    deleteHandler(index,id){
+      this.$confirm('确认要删除此商品', '删除提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteById(id).then(response => {
+          this.$message({
+            message: '删除成功',
+            type: 'success',
+            duration: 1000
+          });
+          this.initList(this.params);
+        });
+      });
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-.box-card {
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
-}
-.title_span{
-  height: 60px;
-  float: left;
-  text-align: start;
-}
+
 </style>

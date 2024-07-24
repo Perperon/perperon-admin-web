@@ -303,12 +303,5 @@ export default {
   display: flex;
   align-items: center;
 }
-.search {
-  float: right;
-  margin-bottom: 10px;
-}
-.select-form{
-  float: left;
-  margin-left: 0;
-}
+
 </style>

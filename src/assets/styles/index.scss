@@ -162,6 +162,17 @@ a:hover {
   width: 50%;
 }
 
+//搜索栏样式
+.search {
+  float: right;
+  margin-bottom: 10px;
+}
+//条件筛选栏样式
+.select-form{
+  float: left;
+  margin-left: 0;
+}
+
 //表单样式
 .el-form-item {
   font-family: 微软雅黑;
