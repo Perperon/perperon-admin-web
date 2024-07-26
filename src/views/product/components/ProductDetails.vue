@@ -10,7 +10,7 @@
     <el-form :model='addForm' :rules='addFormRules' ref='addFormRef' label-width='150px'>
       <input type='hidden' v-model='addForm.userId'/>
       <input type='hidden' v-model='addForm.updatedBy'/>
-      <input type='hidden' v-model='addForm.updatedTime'/>
+      <input type='hidden' v-model='addForm.updated'/>
       <el-form-item label='商品名称:' prop='name'>
         <el-input v-model='addForm.name' placeholder="请填写商品名称"></el-input>
       </el-form-item>
@@ -56,7 +56,7 @@ const defaultFrom = {
   status: true,
   userId: ref(store.getters.userInfo.id),
   updatedBy: '',
-  updatedTime: null
+  updated: null
 }
 export default {
   name: 'ProductDetails',
@@ -110,7 +110,7 @@ export default {
           const response = await getById(this.id);
           this.addForm = response.data;
           this.addForm.updatedBy = store.getters.userInfo.id;
-          this.addForm.updatedTime = formattedTime();
+          this.addForm.updated = formattedTime();
         } catch (error) {
           this.$message.error(error.message || 'An error occurred');
         }
