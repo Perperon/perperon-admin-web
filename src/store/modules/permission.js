@@ -38,6 +38,14 @@ const permission = {
                  if (route){
                      newRouters[2].children.push(route);
                  }
+                 if (child.children && child.children.length > 0) {
+                   child.children.forEach(item => {
+                     const route = hasPermission(item,child.menuName)
+                     if (route){
+                       newRouters[2].children.push(route);
+                     }
+                   })
+                 }
                })
              }
         })

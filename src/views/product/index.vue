@@ -39,7 +39,7 @@
     <div class='table-container'>
       <el-row :gutter='20'>
         <el-col :span="16">
-          <el-button class="btnClass" @click="addDialog()">
+          <el-button class="btnClass" @click="addProduct()">
             添加
           </el-button>
         </el-col>
@@ -105,7 +105,7 @@
       </el-card>
     </div>
     <Pagination :query-info='params' @query='initList'></Pagination>
-    <product-details :is-edit='isEdit' :dialog-title='dialogTitle' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></product-details>
+<!--    <product-details :is-edit='isEdit' :dialog-title='dialogTitle' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></product-details>-->
   </div>
 </template>
 
@@ -142,8 +142,7 @@ export default {
     this.initList()
   },
   components:{
-    Pagination,
-    ProductDetails
+    Pagination
   },
   methods:{
     initList(queryInfo) {
@@ -205,6 +204,10 @@ export default {
           this.initList(this.params);
         });
       });
+    },
+    addProduct(){
+      this.$store.commit("SET_TAB", { menuName: '添加商品', path: '/product/add' })
+      this.$router.push('/product/add')
     }
   }
 }
