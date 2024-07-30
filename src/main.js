@@ -12,6 +12,13 @@ import './icons'
 import './permission'
 import './utils/has'
 
+import VueQuillEditor from 'vue-quill-editor' //引用组件
+import 'quill/dist/quill.core.css' //引入组件样式
+import 'quill/dist/quill.snow.css' //引入组件样式
+import 'quill/dist/quill.bubble.css' //引入组件样式
+
+Vue.use(VueQuillEditor) //附文本编辑器插件注册到全局
+
 Vue.config.productionTip = false
 Vue.use(ElementUI,{locale})
 Vue.component("tree-table", TreeTable)

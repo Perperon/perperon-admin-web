@@ -69,13 +69,19 @@
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品图片" name='3'>
-            <local-upload @imageUrl='handleUpload'></local-upload>
+            <local-upload @imageUrl='handleUpload' @removePath='handleRemove'></local-upload>
             <el-form-item class='putSubmit'>
               <el-button  @click="downPut('2','3')">上一步</el-button>
               <el-button  type='primary' @click="downPut('4','3')">下一步</el-button>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="商品内容" name='4'>商品内容</el-tab-pane>
+          <el-tab-pane label="商品内容" name='4'>
+            <quill-editor v-model='addForm.content'></quill-editor>
+            <el-form-item class='putSubmit'>
+              <el-button  type='primary' @click="downPut('3','4')">上一步</el-button>
+              <el-button  type='primary' @click="submit">添加商品</el-button>
+            </el-form-item>
+          </el-tab-pane>
         </el-tabs>
       </el-form>
     </el-card>
@@ -96,7 +102,8 @@ const defaultFrom = {
   weight: 0,
   number: 0,
   categoryId: '',
-  attachPath: '',
+  content: null,
+  attachList: [],
   status: true,
   userId: ref(store.getters.userInfo.id),
   updatedBy: '',
@@ -213,9 +220,21 @@ export default {
         this.staticData = data.data.list
       }
     },
-    handleUpload(imageUrl){
-      console.log(imageUrl)
-      this.addForm.attachPath = imageUrl
+    handleUpload(info){
+      console.log(info)
+      this.addForm.attachList.push(info)
+    },
+    handleRemove(filepath){
+      const index = this.addForm.attachList.findIndex(x => x.attachPath === filepath)
+      this.addForm.attachList.splice(index, 1)
+    },
+    submit(){
+      this.$refs.addFormRef.validate((valid) => {
+        if (!valid) return this.$message.error('请输入所有必填项信息');
+        //处理商品参数
+
+        console.log(this.addForm)
+      })
     }
   }
 }
@@ -228,6 +247,7 @@ export default {
 }
 .putSubmit{
   float: right;
+  margin-top: 5px;
 }
 .el-checkbox{
   margin: 0 10px 0 25px !important;
