@@ -162,6 +162,14 @@ a:hover {
   width: 50%;
 }
 
+.el-form--label-top .el-form-item__label {
+  float: left;
+}
+
+.el-step__title{
+  font-size: 14px;
+}
+
 //搜索栏样式
 .search {
   float: right;
