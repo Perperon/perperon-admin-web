@@ -95,6 +95,7 @@ import { listByPage } from 'api/category'
 import { listByParamPage } from 'api/categoryParam'
 import { formattedTime, isEntry} from 'utils/date'
 import localUpload from 'components/common/Upload/localUpload'
+import { update, create, getById } from 'api/product'
 
 const defaultFrom = {
   name: '',
@@ -104,6 +105,7 @@ const defaultFrom = {
   categoryId: '',
   content: null,
   attachList: [],
+  publicParamList:[],
   status: true,
   userId: ref(store.getters.userInfo.id),
   updatedBy: '',
@@ -195,8 +197,6 @@ export default {
           if (!valid) {
             this.$message.error('请输入所有必填项信息');
              flag = false
-          }else{
-
           }
         })
         return flag
@@ -221,19 +221,40 @@ export default {
       }
     },
     handleUpload(info){
-      console.log(info)
       this.addForm.attachList.push(info)
     },
     handleRemove(filepath){
       const index = this.addForm.attachList.findIndex(x => x.attachPath === filepath)
       this.addForm.attachList.splice(index, 1)
     },
-    submit(){
+     submit(){
       this.$refs.addFormRef.validate((valid) => {
         if (!valid) return this.$message.error('请输入所有必填项信息');
         //处理商品参数
-
+        this.dynamicData.forEach( item => {
+          if (item.attrValue.length>0){
+            const newInfo = {
+              categoryParamId: item.id,
+              attrValue: item.attrValue.join(' '),
+            }
+            this.addForm.publicParamList.push(newInfo)
+          }
+        })
+        this.staticData.forEach( item => {
+          const newInfo = {
+            categoryParamId: item.id,
+            attrValue: item.attrValue,
+          }
+          this.addForm.publicParamList.push(newInfo)
+        })
         console.log(this.addForm)
+        //保存商品信息到数据库
+        create(this.addForm).then(res =>{
+          if (res.code!==200) return this.$message.error(res.message);
+          this.$message.success(res.message);
+          this.$router.push('/product/list')
+          this.$store.commit("REMOVE_TABS",'/product/add')
+        })
       })
     }
   }

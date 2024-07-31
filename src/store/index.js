@@ -33,6 +33,10 @@ const store = new Vuex.Store({
     SET_TAB_VALUE:(state,value) =>{
       state.editableTabsValue = value;
     },
+    REMOVE_TABS:(state,value) =>{
+      const index = state.editableTabs.findIndex(x => x.name === value)
+      state.editableTabs.splice(index, 1)
+    },
     RESET_TABS:(state) =>{
       state.editableTabsValue = '/index';
       state.editableTabs=[

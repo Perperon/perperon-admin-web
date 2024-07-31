@@ -44,7 +44,7 @@ export default {
       this.dialogVisible = true
     },
     handleUploadSuccess(res){
-      const info = {attachPath: res.data.src}
+      const info = {path: res.data.src}
       this.$emit('imageUrl',info)
     }
   }
