@@ -39,7 +39,6 @@ export default {
       this.$emit('removePath',filePath)
     },
     handlePreview(file) {
-      console.log(file);
       this.previewImage = this.host+file.response.data.src
       this.dialogVisible = true
     },

@@ -247,7 +247,6 @@ export default {
           }
           this.addForm.publicParamList.push(newInfo)
         })
-        console.log(this.addForm)
         //保存商品信息到数据库
         create(this.addForm).then(res =>{
           if (res.code!==200) return this.$message.error(res.message);
