@@ -2,7 +2,7 @@
   <div class='app-container'>
     <el-card>
       <el-alert
-        title='添加商品信息' center show-icon type='info' :closable='false'>
+        title='修改商品信息' center show-icon type='info' :closable='false'>
       </el-alert>
       <el-steps :space='250' :active="active - 0" finish-status="success" align-center>
         <el-step title="基本信息" ></el-step>
@@ -12,14 +12,14 @@
         <el-step title="商品内容" ></el-step>
         <el-step title="完成" ></el-step>
       </el-steps>
-      <el-form :model='addForm' :rules='addFromRules' ref='addFormRef' label-position='top' label-width='100px'>
+      <el-form :model='editForm' :rules='editFormRules' ref='editFormRef' label-position='top' label-width='100px'>
         <el-tabs v-model='active' tab-position="left" :before-leave='beforeTabLeave' @tab-click='handleTabClick'>
           <el-tab-pane label="基本信息" name='0'>
-            <input type='hidden' v-model='addForm.userId'/>
-            <input type='hidden' v-model='addForm.updatedBy'/>
-            <input type='hidden' v-model='addForm.updated'/>
+            <input type='hidden' v-model='editForm.userId'/>
+            <input type='hidden' v-model='editForm.updatedBy'/>
+            <input type='hidden' v-model='editForm.updated'/>
             <el-form-item label='商品名称' prop='name'>
-              <el-input v-model='addForm.name' placeholder="请填写商品名称"></el-input>
+              <el-input v-model='editForm.name' placeholder="请填写商品名称"></el-input>
             </el-form-item>
             <el-form-item label='商品类型:' prop='categoryId'>
               <el-cascader style='width: 100%' clearable
@@ -29,16 +29,16 @@
                            @change='handleChange'></el-cascader>
             </el-form-item>
             <el-form-item label='商品价格(元):' prop='price'>
-              <el-input-number v-model='addForm.price' :min='0' :precision="2" :step="0.1" style='width: 100%'></el-input-number>
+              <el-input-number v-model='editForm.price' :min='0' :precision="2" :step="0.1" style='width: 100%'></el-input-number>
             </el-form-item>
             <el-form-item label='商品重量(克):' prop='weight'>
-              <el-input-number v-model='addForm.weight' :min='0' :precision="2" :step="0.1" style='width: 100%'></el-input-number>
+              <el-input-number v-model='editForm.weight' :min='0' :precision="2" :step="0.1" style='width: 100%'></el-input-number>
             </el-form-item>
             <el-form-item label='商品数量:' prop='number'>
-              <el-input-number v-model='addForm.number' :min='0' :precision="1" style='width: 100%'></el-input-number>
+              <el-input-number v-model='editForm.number' :min='0' :precision="1" style='width: 100%'></el-input-number>
             </el-form-item>
             <el-form-item label='是否有效:' prop='status'>
-              <el-radio-group v-model="addForm.status">
+              <el-radio-group v-model="editForm.status">
                 <el-radio :label="true">有效</el-radio>
                 <el-radio :label="false">无效</el-radio>
               </el-radio-group>
@@ -76,7 +76,7 @@
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品内容" name='4'>
-            <quill-editor v-model='addForm.content'></quill-editor>
+            <quill-editor v-model='editForm.content'></quill-editor>
             <el-form-item class='putSubmit'>
               <el-button  type='primary' @click="downPut('3','4')">上一步</el-button>
               <el-button  type='primary' @click="submit">添加商品</el-button>
@@ -92,10 +92,10 @@
 import { ref } from 'vue'
 import store from 'store'
 import { listByPage } from 'api/category'
-import { listByParamPage } from 'api/categoryParam'
-import { isEntry} from 'utils/date'
+import { listByParamPage } from 'api/productParam'
+import { formattedTime,isEntry} from 'utils/date'
 import localUpload from 'components/common/Upload/localUpload'
-import {  create } from 'api/product'
+import { update, getById } from 'api/product'
 
 const defaultFrom = {
   name: '',
@@ -112,15 +112,15 @@ const defaultFrom = {
   updated: null
 }
 export default {
-  name: 'ProductAdd',
+  name: 'ProductEdit',
   components: {
     localUpload
   },
   data(){
     return {
       active: 0,
-      addForm:Object.assign({},defaultFrom),
-      addFromRules:{
+      editForm:Object.assign({},defaultFrom),
+      editFormRules:{
         name: [
           { required: true, message: '请输入商品名称', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }],
@@ -153,8 +153,10 @@ export default {
       const res = await listByPage();
       if (res.code !== 200) return this.$message.error(res.message);
       this.categoryData = this.filterChildren(res.data.list);
-      if (!isEntry(this.addForm.categoryId)) {
-        const { categoryId } = this.addForm;
+      const response = await getById(this.$route.query.id);
+      this.editForm = { ...response.data, updatedBy: store.getters.userInfo.id, updatedTime: formattedTime() };
+      if (!isEntry(this.editForm.categoryId)) {
+        const { categoryId } = this.editForm;
         const categoryIds = [];
 
         this.categoryData.forEach(item => {
@@ -178,7 +180,7 @@ export default {
         this.selectCategoryKey = []
         return
       }
-      this.addForm.categoryId = this.selectCategoryKey[this.selectCategoryKey.length - 1]
+      this.editForm.categoryId = this.selectCategoryKey[this.selectCategoryKey.length - 1]
     },
     filterChildren(arr) {
       return arr.map(item => {
@@ -193,10 +195,10 @@ export default {
     beforeTabLeave(activeName, oldActiveName) {
       if (oldActiveName === '0') {
         let flag = true
-        this.$refs.addFormRef.validate((valid) => {
+        this.$refs.editFormRef.validate((valid) => {
           if (!valid) {
             this.$message.error('请输入所有必填项信息');
-             flag = false
+            flag = false
           }
         })
         return flag
@@ -206,33 +208,33 @@ export default {
       this.beforeTabLeave(activeName, oldActiveName)
       this.active = activeName
       this.$nextTick(() => {
-        // 在这里执行你希望在 DOM 更新后执行的代码
+        // 在这里执行你希望在 DOM 更新后执行的代码\
         this.handleTabClick()
       })
     },
     async handleTabClick(){
       if (this.active === '1') {
-        const data = await listByParamPage({typeCode:'dynamicParam', categoryId: this.addForm.categoryId})
+        const data = await listByParamPage({typeCode:'dynamicParam', categoryId: this.editForm.categoryId})
         if (data.code !== 200) return this.$message.error(data.message);
         data.data.list.forEach(e => {
           e.attrValue = !isEntry(e.attrValue) ? e.attrValue.split(' ') : []
         })
         this.dynamicData = data.data.list
       }else if( this.active === '2'){
-        const data = await listByParamPage({typeCode:'staticParam', categoryId: this.addForm.categoryId})
+        const data = await listByParamPage({typeCode:'staticParam', categoryId: this.editForm.categoryId})
         if (data.code !== 200) return this.$message.error(data.message);
         this.staticData = data.data.list
       }
     },
     handleUpload(info){
-      this.addForm.attachList.push(info)
+      this.editForm.attachList.push(info)
     },
     handleRemove(filepath){
-      const index = this.addForm.attachList.findIndex(x => x.attachPath === filepath)
-      this.addForm.attachList.splice(index, 1)
+      const index = this.editForm.attachList.findIndex(x => x.attachPath === filepath)
+      this.editForm.attachList.splice(index, 1)
     },
-     submit(){
-      this.$refs.addFormRef.validate((valid) => {
+    submit(){
+      this.$refs.editFormRef.validate((valid) => {
         if (!valid) return this.$message.error('请输入所有必填项信息');
         //处理商品参数
         this.dynamicData.forEach( item => {
@@ -241,7 +243,7 @@ export default {
               categoryParamId: item.id,
               attrValue: item.attrValue.join(' '),
             }
-            this.addForm.publicParamList.push(newInfo)
+            this.editForm.publicParamList.push(newInfo)
           }
         })
         this.staticData.forEach( item => {
@@ -249,10 +251,10 @@ export default {
             categoryParamId: item.id,
             attrValue: item.attrValue,
           }
-          this.addForm.publicParamList.push(newInfo)
+          this.editForm.publicParamList.push(newInfo)
         })
         //保存商品信息到数据库
-        create(this.addForm).then(res =>{
+        update(this.editForm).then(res =>{
           if (res.code!==200) return this.$message.error(res.message);
           this.$message.success(res.message);
           this.$router.push('/product/list')
@@ -267,7 +269,7 @@ export default {
 <style lang='less'>
 
 .el-steps{
-   margin: 20px 0;
+  margin: 20px 0;
 }
 .putSubmit{
   float: right;

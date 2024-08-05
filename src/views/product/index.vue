@@ -87,7 +87,7 @@
                 <el-button
                   size='mini'
                   type='primary' round
-                  @click='editDialog(scope.$index,scope.row.id)'>
+                  @click='editProduct(scope.$index,scope.row.id)'>
                   <svg-icon icon-class='edit'></svg-icon>
                 </el-button>
               </el-tooltip>
@@ -105,13 +105,11 @@
       </el-card>
     </div>
     <Pagination :query-info='params' @query='initList'></Pagination>
-<!--    <product-details :is-edit='isEdit' :dialog-title='dialogTitle' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></product-details>-->
   </div>
 </template>
 
 <script>
 import Pagination from 'components/common/Pagination'
-import ProductDetails from './components/ProductDetails.vue'
 import { params,resetParams } from 'utils/query'
 import { listByPage,deleteById,update } from 'api/product'
 export default {
@@ -121,11 +119,7 @@ export default {
       multipleSelection: [],
       productData: [],
       params: Object.assign({},params),
-      isDialog: false,
-      isEdit: false,
-      dialogTitle: null,
       id: null,
-      btnFlag: true,
       statusData: [
         {
           label: '启用',
@@ -154,33 +148,12 @@ export default {
     },
     handleSelectionChange(val){
       this.multipleSelection = val
-      if (this.multipleSelection.length>0){
-        this.btnFlag = false
-      }else {
-        this.btnFlag = true
-      }
     },
     searchProductList(){
       this.initList(this.params)
     },
     handleResetSearch() {
       this.params = Object.assign({}, resetParams);
-    },
-    addDialog() {
-      this.isDialog = true
-      this.isEdit = false
-      this.dialogTitle = '添加商品'
-    },
-    editDialog(index, id) {
-      this.isDialog = true
-      this.isEdit = true
-      this.id = id
-      this.dialogTitle = '修改商品'
-    },
-    handleDialog(flag) {
-      this.isDialog = flag;
-      this.isEdit = flag;
-      this.initList(this.params)
     },
     updateStatus(id, status) {
       update({id: id, status: !status}).then(res => {
@@ -208,6 +181,10 @@ export default {
     addProduct(){
       this.$store.commit("SET_TAB", { menuName: '添加商品', path: '/product/add' })
       this.$router.push('/product/add')
+    },
+    editProduct(index,id){
+      this.$store.commit("SET_TAB", { menuName: '修改商品', path: '/product/edit' })
+      this.$router.push({path:'/product/edit',query:{id:id}})
     }
   }
 }
