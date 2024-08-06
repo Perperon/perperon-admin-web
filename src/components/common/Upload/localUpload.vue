@@ -5,6 +5,7 @@
       :action="uploadUrl"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
+      :file-list="fileList"
       list-type="picture"
       :on-success="handleUploadSuccess">
       <el-button size="small" type="primary">点击上传</el-button>
@@ -22,6 +23,12 @@
 <script>
 export default {
   name: 'localUpload',
+  props:{
+    attachList:{
+      type: Array,
+      default:  []
+    }
+  },
   data(){
     return{
       header: {
@@ -30,12 +37,13 @@ export default {
       host: process.env.BASE_API,
       uploadUrl: process.env.BASE_API + '/minio/upload',
       previewImage: null,
-      dialogVisible: false
+      dialogVisible: false,
+      fileList:[]
     }
   },
   methods:{
     handleRemove(file) {
-      const filePath = file.response.data.src
+      const filePath = file.url.replace(this.host, '');
       this.$emit('removePath',filePath)
     },
     handlePreview(file) {
@@ -43,8 +51,18 @@ export default {
       this.dialogVisible = true
     },
     handleUploadSuccess(res){
-      const info = {path: res.data.src}
+      const info = {name: res.data.title,path: res.data.src}
       this.$emit('imageUrl',info)
+    }
+  },
+  watch:{
+    attachList:{
+      handler(value){
+        this.fileList = []
+        value.forEach(item => {
+          this.fileList.push({name: item.name,url: this.host+item.path})
+        })
+      }
     }
   }
 }

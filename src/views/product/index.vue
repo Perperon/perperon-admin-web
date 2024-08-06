@@ -111,7 +111,7 @@
 <script>
 import Pagination from 'components/common/Pagination'
 import { params,resetParams } from 'utils/query'
-import { listByPage,deleteById,update } from 'api/product'
+import { listByPage,deleteById,updateStatus } from 'api/product'
 export default {
   name: "product",
   data(){
@@ -156,7 +156,7 @@ export default {
       this.params = Object.assign({}, resetParams);
     },
     updateStatus(id, status) {
-      update({id: id, status: !status}).then(res => {
+      updateStatus({id: id, status: !status}).then(res => {
         if (res.code !== 200) return this.$message.error(res.message)
         this.$message.success(res.message)
         this.initList(this.params);

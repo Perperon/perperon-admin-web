@@ -69,7 +69,7 @@
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品图片" name='3'>
-            <local-upload @imageUrl='handleUpload' @removePath='handleRemove'></local-upload>
+            <local-upload :attach-list='addForm.attachList' @imageUrl='handleUpload' @removePath='handleRemove'></local-upload>
             <el-form-item class='putSubmit'>
               <el-button  @click="downPut('2','3')">上一步</el-button>
               <el-button  type='primary' @click="downPut('4','3')">下一步</el-button>
@@ -147,6 +147,10 @@ export default {
   },
   created() {
     this.getCategory()
+  },
+  mounted() {
+    this.addForm.attachList=[]
+    this.addForm.publicParamList=[]
   },
   methods: {
     async getCategory(){
@@ -228,8 +232,10 @@ export default {
       this.addForm.attachList.push(info)
     },
     handleRemove(filepath){
-      const index = this.addForm.attachList.findIndex(x => x.attachPath === filepath)
-      this.addForm.attachList.splice(index, 1)
+      const index = this.addForm.attachList.findIndex(x => x.path === filepath)
+      if (index !== -1) {
+        this.addForm.attachList.splice(index, 1);
+      }
     },
      submit(){
       this.$refs.addFormRef.validate((valid) => {

@@ -69,7 +69,7 @@
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品图片" name='3'>
-            <local-upload @imageUrl='handleUpload' @removePath='handleRemove'></local-upload>
+            <local-upload :attach-list='editForm.attachList' @imageUrl='handleUpload' @removePath='handleRemove'></local-upload>
             <el-form-item class='putSubmit'>
               <el-button  @click="downPut('2','3')">上一步</el-button>
               <el-button  type='primary' @click="downPut('4','3')">下一步</el-button>
@@ -79,7 +79,7 @@
             <quill-editor v-model='editForm.content'></quill-editor>
             <el-form-item class='putSubmit'>
               <el-button  type='primary' @click="downPut('3','4')">上一步</el-button>
-              <el-button  type='primary' @click="submit">添加商品</el-button>
+              <el-button  type='primary' @click="submit">修改商品</el-button>
             </el-form-item>
           </el-tab-pane>
         </el-tabs>
@@ -148,6 +148,10 @@ export default {
   created() {
     this.getCategory()
   },
+  mounted() {
+    this.editForm.attachList=[]
+    this.editForm.publicParamList=[]
+  },
   methods: {
     async getCategory(){
       const res = await listByPage();
@@ -214,14 +218,14 @@ export default {
     },
     async handleTabClick(){
       if (this.active === '1') {
-        const data = await listByParamPage({typeCode:'dynamicParam', categoryId: this.editForm.categoryId})
+        const data = await listByParamPage({typeCode:'dynamicParam', categoryId: this.editForm.categoryId,productId:this.editForm.id})
         if (data.code !== 200) return this.$message.error(data.message);
         data.data.list.forEach(e => {
           e.attrValue = !isEntry(e.attrValue) ? e.attrValue.split(' ') : []
         })
         this.dynamicData = data.data.list
       }else if( this.active === '2'){
-        const data = await listByParamPage({typeCode:'staticParam', categoryId: this.editForm.categoryId})
+        const data = await listByParamPage({typeCode:'staticParam', categoryId: this.editForm.categoryId,productId:this.editForm.id})
         if (data.code !== 200) return this.$message.error(data.message);
         this.staticData = data.data.list
       }
@@ -230,8 +234,10 @@ export default {
       this.editForm.attachList.push(info)
     },
     handleRemove(filepath){
-      const index = this.editForm.attachList.findIndex(x => x.attachPath === filepath)
-      this.editForm.attachList.splice(index, 1)
+      const index = this.editForm.attachList.findIndex(x => x.path === filepath)
+      if (index !== -1) {
+        this.editForm.attachList.splice(index, 1);
+      }
     },
     submit(){
       this.$refs.editFormRef.validate((valid) => {
@@ -257,8 +263,9 @@ export default {
         update(this.editForm).then(res =>{
           if (res.code!==200) return this.$message.error(res.message);
           this.$message.success(res.message);
+          this.$refs.editFormRef.resetFields()
           this.$router.push('/product/list')
-          this.$store.commit("REMOVE_TABS",'/product/add')
+          this.$store.commit("REMOVE_TABS",'/product/edit')
         })
       })
     }

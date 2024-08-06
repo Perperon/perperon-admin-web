@@ -16,6 +16,14 @@ export function update(data){
   })
 }
 
+export function updateStatus(data){
+  return request({
+    url: '/product/updateStatus',
+    method: 'put',
+    data: data
+  })
+}
+
 export function create(data){
   return request({
     url:'/product/create',
