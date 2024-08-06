@@ -150,7 +150,6 @@ export default {
   },
   mounted() {
     this.editForm.attachList=[]
-    this.editForm.publicParamList=[]
   },
   methods: {
     async getCategory(){
@@ -242,11 +241,12 @@ export default {
     submit(){
       this.$refs.editFormRef.validate((valid) => {
         if (!valid) return this.$message.error('请输入所有必填项信息');
+        this.editForm.publicParamList=[]
         //处理商品参数
         this.dynamicData.forEach( item => {
           if (item.attrValue.length>0){
             const newInfo = {
-              categoryParamId: item.id,
+              categoryParamId: item.categoryParamId,
               attrValue: item.attrValue.join(' '),
             }
             this.editForm.publicParamList.push(newInfo)
@@ -254,7 +254,7 @@ export default {
         })
         this.staticData.forEach( item => {
           const newInfo = {
-            categoryParamId: item.id,
+            categoryParamId: item.categoryParamId,
             attrValue: item.attrValue,
           }
           this.editForm.publicParamList.push(newInfo)
