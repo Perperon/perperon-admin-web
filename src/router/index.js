@@ -33,58 +33,7 @@ export const routes =[
         component: () => import('views/account/userCenter/index')
       }
     ]
-  },
-  /*{
-    path: '/product',
-    name: 'product',
-    redirect: '/product/list',
-    component: layOut,
-    meta: { title: '商品管理',icon: 'product' },
-    children:[
-      {
-        path: '/product/list',
-        name: 'productList',
-        meta: { title: '商品列表',icon: 'product_list' },
-        component: () => import('views/product/index')
-      }
-      ]
-  },
-  {
-    path: '/account',
-    name: 'account',
-    redirect: '/account/list',
-    component: layOut,
-    meta: { title: '用户管理',icon: 'userCenter' },
-    children:[
-      {
-        path: '/account/list',
-        name: 'accountList',
-        meta: { title: '用户列表',icon: 'user_list' },
-        component: () => import('views/account/index')
-      }
-    ]
-  },
-  {
-    path: '/auth',
-    name: 'auth',
-    redirect: '/auth/list',
-    component: layOut,
-    meta: { title: '权限管理',icon: 'auth' },
-    children:[
-      {
-        path: '/menu/list',
-        name: 'menuList',
-        meta: { title: '菜单列表',icon: 'menu_list' },
-        component: () => import('views/auth/menu/index')
-      },
-      {
-        path: '/role/list',
-        name: 'roleList',
-        meta: { title: '角色列表',icon: 'role_list' },
-        component: () => import('views/auth/role/index')
-      }
-    ]
-  }*/
+  }
 ]
 const router = new Router({
   routes,
