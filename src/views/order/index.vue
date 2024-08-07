@@ -38,11 +38,6 @@
     <!--列表区-->
     <div class='table-container'>
       <el-row :gutter='20'>
-        <el-col :span='16'>
-          <el-button class='btnClass' @click='addOrder()'>
-            添加
-          </el-button>
-        </el-col>
         <el-col class='search' :span='4'>
           <el-input placeholder='请输入商品名称搜索' @keyup.enter.native='searchOrderList' v-model='params.name' clearable
                     @clear='searchOrderList'>
@@ -89,7 +84,7 @@
                 <el-button
                   size='mini'
                   type='primary' round
-                  @click='editOrder(scope.$index,scope.row.id)'>
+                  @click='editDialog(scope.$index,scope.row.id)'>
                   <svg-icon icon-class='edit'></svg-icon>
                 </el-button>
               </el-tooltip>
@@ -106,6 +101,7 @@
         </el-table>
       </el-card>
     </div>
+    <order-details :dialog-title='dialogTitle' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></order-details>
     <Pagination :query-info='params' @query='initList'></Pagination>
   </div>
 </template>
@@ -113,7 +109,8 @@
 <script>
 import Pagination from 'components/common/Pagination'
 import { params, resetParams } from 'utils/query'
-import { listByPage, deleteById, updateStatus } from 'api/order'
+import { listByPage, deleteById } from 'api/order'
+import OrderDetails from './components/OrderDetails'
 
 export default {
   name: 'order',
@@ -123,6 +120,8 @@ export default {
       orderData: [],
       params: Object.assign({}, params),
       id: null,
+      dialogTitle:'',
+      isDialog:false,
       statusData: [
         {
           label: '启用',
@@ -139,7 +138,8 @@ export default {
     this.initList()
   },
   components: {
-    Pagination
+    Pagination,
+    OrderDetails
   },
   methods: {
     initList(queryInfo) {
@@ -158,6 +158,16 @@ export default {
     handleResetSearch() {
       this.params = Object.assign({}, resetParams)
     },
+    editDialog(index, id) {
+      this.isDialog = true;
+      this.id = id;
+      this.dialogTitle = '修改订单'
+    },
+    handleDialog(flag) {
+      this.isDialog = flag;
+      this.isEdit = flag;
+      this.initList(this.params)
+    },
     deleteHandler(index, id) {
       this.$confirm('确认要删除此商品', '删除提示', {
         confirmButtonText: '确定',
@@ -173,14 +183,6 @@ export default {
           this.initList(this.params)
         })
       })
-    },
-    addOrder() {
-      this.$store.commit('SET_TAB', { menuName: '添加商品', path: '/order/add' })
-      this.$router.push('/order/add')
-    },
-    editOrder(index, id) {
-      this.$store.commit('SET_TAB', { menuName: '修改商品', path: '/order/edit' })
-      this.$router.push({ path: '/order/edit', query: { id: id } })
     }
   }
 }
