@@ -169,6 +169,18 @@ a:hover {
 .el-step__title{
   font-size: 14px;
 }
+
+.el-timeline-item__content {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.el-timeline-item__timestamp {
+  text-align: left;
+  padding-left: 20px;
+}
+
+
 //富文本编辑器样式
 .ql-editor{
   min-height: 300px;

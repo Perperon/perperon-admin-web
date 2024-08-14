@@ -88,12 +88,12 @@
                   <svg-icon icon-class='edit'></svg-icon>
                 </el-button>
               </el-tooltip>
-              <el-tooltip class='item' effect='dark' content='删除' placement='top' v-has="'order:delete'">
+              <el-tooltip class='item' effect='dark' content='订单详情' placement='top' v-has="'order:details'">
                 <el-button
                   size='mini'
-                  type='danger' round
-                  @click='deleteHandler(scope.$index,scope.row.id)'>
-                  <svg-icon icon-class='delete'></svg-icon>
+                  type='success' round
+                  @click='editDetails(scope.$index,scope.row.id)'>
+                  <svg-icon icon-class='order_details'></svg-icon>
                 </el-button>
               </el-tooltip>
             </template>
@@ -102,6 +102,7 @@
       </el-card>
     </div>
     <order-details :dialog-title='dialogTitle' :is-dialog='isDialog' :id="id" @dislogDetails='handleDialog'></order-details>
+    <order-timeline :dialog-title='title' :is-dialog='isDetails' @dislogDetails='handleDetails'></order-timeline>
     <Pagination :query-info='params' @query='initList'></Pagination>
   </div>
 </template>
@@ -109,8 +110,9 @@
 <script>
 import Pagination from 'components/common/Pagination'
 import { params, resetParams } from 'utils/query'
-import { listByPage, deleteById } from 'api/order'
+import { listByPage } from 'api/order'
 import OrderDetails from './components/OrderDetails'
+import OrderTimeline from './components/OrderTimeline'
 
 export default {
   name: 'order',
@@ -121,7 +123,9 @@ export default {
       params: Object.assign({}, params),
       id: null,
       dialogTitle:'',
+      title:'',
       isDialog:false,
+      isDetails:false,
       statusData: [
         {
           label: '启用',
@@ -139,7 +143,8 @@ export default {
   },
   components: {
     Pagination,
-    OrderDetails
+    OrderDetails,
+    OrderTimeline
   },
   methods: {
     initList(queryInfo) {
@@ -168,21 +173,13 @@ export default {
       this.isEdit = flag;
       this.initList(this.params)
     },
-    deleteHandler(index, id) {
-      this.$confirm('确认要删除此商品', '删除提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteById(id).then(response => {
-          this.$message({
-            message: '删除成功',
-            type: 'success',
-            duration: 1000
-          })
-          this.initList(this.params)
-        })
-      })
+    editDetails(index, id) {
+      this.isDetails = true;
+      this.title = '物流进度'
+    },
+    handleDetails(flag) {
+      this.isDetails = flag;
+      this.initList(this.params)
     }
   }
 }
