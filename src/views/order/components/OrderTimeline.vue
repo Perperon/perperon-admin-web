@@ -3,7 +3,6 @@
     :title='dialogTitle'
     :visible.sync='dialogVisible'
     width='40%'
-    :before-close='handleBeforeClose'
     @close='dialogClose'>
     <el-timeline>
       <el-timeline-item
@@ -51,14 +50,6 @@ export default {
     }
   },
   methods: {
-    handleBeforeClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.dislogVisible = false
-          this.$emit('dislogDetails', this.dislogVisible)
-          done()
-        })
-    },
     dialogClose() {
       this.dislogVisible = false
       this.$emit('dislogDetails', this.dislogVisible)
