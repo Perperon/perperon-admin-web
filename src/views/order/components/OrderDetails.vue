@@ -123,19 +123,5 @@ export default {
 </script>
 
 <style scoped>
-.el-select {
-  display: flex;
-}
 
-.el-radio-group {
-  margin-right: 316px;
-}
-
-.el-input-number {
-  position: relative;
-  display: inline-block;
-  width: 191px;
-  right: 179px;
-  line-height: 38px;
-}
 </style>
