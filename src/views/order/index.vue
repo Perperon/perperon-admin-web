@@ -59,7 +59,7 @@
           </el-table-column>
           <el-table-column prop='orderNo' label='订单编号' align='center'>
           </el-table-column>
-          <el-table-column prop='orderPrice' label='订单价格价格' align='center'>
+          <el-table-column prop='orderPrice' label='订单价格' align='center'>
             <template v-slot='scope'>
               <span>{{ scope.row.orderPrice }}元</span>
             </template>
