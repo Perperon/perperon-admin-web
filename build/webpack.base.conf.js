@@ -33,7 +33,8 @@ module.exports = {
       'router': resolve('src/router'),
       'store': resolve('src/store'),
       'utils': resolve('src/utils'),
-      'api': resolve('src/api')
+      'api': resolve('src/api'),
+      'cropperjs$': 'cropperjs/dist/cropper.js'
     }
   },
   module: {

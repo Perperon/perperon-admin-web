@@ -10,7 +10,7 @@
       <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
           <!--头像-->
-          <el-avatar fit='scale-down' :size="50" :src="avatar"></el-avatar>
+          <el-avatar class="full-avatar" style="overflow: hidden;" :size="50" :src="avatar"></el-avatar>
           &nbsp;&nbsp;{{$store.getters.name}}({{roleName}})
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
@@ -228,4 +228,21 @@ export default {
   color: #99a9bf;
   align-items: center;
 }
+/* 强制图片填满并裁剪 */
+.full-avatar ::v-deep .el-avatar {
+  overflow: hidden !important;
+  border-radius: 50% !important;
+  width: 50px;  /* 设置固定大小 */
+  height: 50px;
+}
+
+.full-avatar ::v-deep img {
+  width: 100% !important;  /* 填满宽度 */
+  height: 100% !important;  /* 填满高度 */
+  object-fit: cover !important;  /* 保持比例并裁剪 */
+  object-position: center center !important;  /* 确保图片居中 */
+  position: relative !important;
+}
+
+
 </style>

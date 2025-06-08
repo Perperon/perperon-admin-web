@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import TreeTable from 'vue-table-with-tree-grid'
+//import VueCropper from 'vue-cropper'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 import 'assets/css/normalize.css' // A modern alternative to CSS resets
@@ -18,6 +19,7 @@ import 'quill/dist/quill.snow.css' //引入组件样式
 import 'quill/dist/quill.bubble.css' //引入组件样式
 
 Vue.use(VueQuillEditor) //附文本编辑器插件注册到全局
+//Vue.use(VueCropper)
 
 Vue.config.productionTip = false
 Vue.use(ElementUI,{locale})

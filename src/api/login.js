@@ -45,6 +45,15 @@ export function update(data){
   })
 }
 
+export function updateAvatar(data){
+  return request({
+    url:'/account/uploadAvatar',
+    method: 'post',
+    data: data,
+    headers: {'Content-Type': 'multipart/form-data' }
+  })
+}
+
 export function updatePwd(data){
   return request({
     url:'/account/updatePwd',
