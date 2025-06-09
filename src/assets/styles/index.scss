@@ -1,8 +1,7 @@
-@import './variables.scss';
-@import './mixin.scss';
-@import './transition.scss';
-@import './element-ui.scss';
-@import './sidebar.scss';
+@use './mixin.scss' as mix;
+@use './transition.scss' as trans;
+@use './element-ui.scss' as elementui;
+@use './sidebar.scss' as sidebar;
 
 html,body, #app {
   height: 100%;
