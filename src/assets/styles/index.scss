@@ -202,7 +202,9 @@ a:hover {
   font-weight: bold;
 }
 .el-radio-group {
-  margin-right: 412px;
+  display: flex;
+  padding-top: 13px;
+  padding-left: 13px;
 }
 
 .color-main {
